@@ -12,7 +12,7 @@ warn()    { echo "  [!] $*"; }
 
 echo ""
 echo "╔══════════════════════════════════════════╗"
-echo "║         gabotachak — mac setup           ║"
+echo "║         $USER — mac setup                ║"
 echo "╚══════════════════════════════════════════╝"
 echo ""
 
