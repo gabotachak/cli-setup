@@ -55,6 +55,27 @@ tide configure
 
 ---
 
+## SSH + GPG Setup
+
+Interactive assistant — you only need to paste the generated keys into GitHub.
+
+```bash
+bash ~/github.com/gabotachak/cli-setup/mac/setup-keys.sh
+```
+
+The script will:
+1. Generate an **Ed25519 SSH key** (if none exists)
+2. Configure `~/.ssh/config` for macOS Keychain
+3. Open GitHub SSH settings → you paste the key
+4. Test the SSH connection
+5. Generate a **GPG key** (Ed25519, via macOS passphrase dialog)
+6. Configure git to auto-sign all commits + tags
+7. Open GitHub GPG settings → you paste the key
+
+> Requires `gnupg` and `pinentry-mac` (included in Brewfile).
+
+---
+
 ## Shell Features
 
 ### Fish (primary)
