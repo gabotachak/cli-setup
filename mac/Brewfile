@@ -9,7 +9,7 @@ brew "git-lfs"
 brew "gh"
 brew "go"
 brew "node"
-brew "pyenv"
+brew "mise"
 brew "gnupg"
 brew "pinentry-mac"
 
@@ -21,6 +21,7 @@ brew "docker-compose"
 
 # ── AI / ML ──────────────────────────────────────────────────
 brew "ollama"
+brew "opencode"
 brew "llmfit"
 
 # ── Media ────────────────────────────────────────────────────
