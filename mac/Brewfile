@@ -1,0 +1,92 @@
+# Brewfile — macOS setup
+# Install all: brew bundle --file=Brewfile
+
+tap "homebrew/bundle"
+tap "teamookla/speedtest"
+
+# ── Dev tools ────────────────────────────────────────────────
+brew "git-lfs"
+brew "gh"
+brew "go"
+brew "node"
+brew "pyenv"
+brew "gnupg"
+brew "pinentry-mac"
+
+# ── Containers ───────────────────────────────────────────────
+brew "colima"
+brew "docker"
+brew "docker-buildx"
+brew "docker-compose"
+
+# ── AI / ML ──────────────────────────────────────────────────
+brew "ollama"
+brew "llmfit"
+
+# ── Media ────────────────────────────────────────────────────
+brew "ffmpeg"
+
+# ── Shell / CLI ──────────────────────────────────────────────
+brew "fish"
+brew "eza"
+brew "tree"
+brew "ncdu"
+brew "fastfetch"
+brew "pandoc"
+brew "typst"
+brew "spotify_player"
+brew "teamookla/speedtest/speedtest"
+
+# ── Misc ─────────────────────────────────────────────────────
+brew "tcl-tk"
+brew "zlib"
+brew "libb2"
+
+# ── Apps (casks) ─────────────────────────────────────────────
+
+# Browsers
+cask "brave-browser"
+cask "google-chrome"
+cask "orion"
+cask "zen"
+
+# Editors / IDEs
+cask "visual-studio-code"
+cask "windsurf"
+cask "warp"
+cask "iterm2"
+
+# Dev tools
+cask "bruno"
+cask "postman"
+cask "dbeaver-community"
+cask "utm"
+
+# Productivity
+cask "obsidian"
+cask "onlyoffice"
+cask "applite"
+
+# Communication
+cask "discord"
+cask "slack"
+cask "microsoft-teams"
+cask "zoom"
+
+# Media / Entertainment
+cask "spotify"
+cask "audacity"
+cask "obs"
+cask "steam"
+
+# Utilities
+cask "betterdisplay"
+cask "logi-options+"
+cask "basictex"
+
+# Game dev
+cask "unity-hub"
+
+# Fonts
+cask "font-iosevka"
+cask "font-iosevka-nerd-font"
