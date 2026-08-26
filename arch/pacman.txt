@@ -1,0 +1,46 @@
+# pacman.txt — official repo packages (Arch/CachyOS)
+# Install: sudo pacman -S --needed - < pacman.txt   (comments/blank lines are ignored by setup.sh's loop)
+
+# ── Dev tools ────────────────────────────────────────────────
+git-lfs
+github-cli
+go
+nodejs
+npm
+mise
+gnupg
+pinentry
+
+# ── Containers ───────────────────────────────────────────────
+docker
+docker-buildx
+docker-compose
+
+# ── AI / ML ──────────────────────────────────────────────────
+ollama
+
+# ── Media ────────────────────────────────────────────────────
+ffmpeg
+
+# ── Shell / CLI ──────────────────────────────────────────────
+fish
+eza
+tree
+ncdu
+fastfetch
+pandoc-cli
+typst
+
+# ── Misc ─────────────────────────────────────────────────────
+tk
+zlib
+libb2
+texlive-basic
+
+# ── Apps ─────────────────────────────────────────────────────
+obsidian
+discord
+audacity
+obs-studio
+steam
+solaar

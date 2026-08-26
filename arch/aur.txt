@@ -1,0 +1,47 @@
+# aur.txt — AUR packages (installed via paru)
+# Install: paru -S --needed - < aur.txt   (comments/blank lines ignored by setup.sh's loop)
+# A wrong/renamed package here just fails that one line — setup.sh continues and reports it at the end.
+
+# ── AI / ML ──────────────────────────────────────────────────
+opencode-bin
+
+# ── Shell / CLI ──────────────────────────────────────────────
+spotify-player
+speedtest-bin
+
+# ── Browsers ─────────────────────────────────────────────────
+brave-bin
+google-chrome
+zen-browser-bin
+
+# ── Editors / IDEs ───────────────────────────────────────────
+visual-studio-code-bin
+windsurf
+warp-terminal-bin
+
+# ── Dev tools ────────────────────────────────────────────────
+bruno-bin
+postman-bin
+dbeaver
+
+# ── Productivity ─────────────────────────────────────────────
+onlyoffice-bin
+
+# ── Communication ────────────────────────────────────────────
+teams-for-linux
+zoom
+slack-desktop
+
+# ── Media / Entertainment ────────────────────────────────────
+spotify
+
+# ── Game dev ─────────────────────────────────────────────────
+unityhub
+
+# ── Fonts ─────────────────────────────────────────────────────
+ttf-iosevka
+ttf-iosevka-nerd
+
+# ── No Arch/AUR equivalent (macOS-only, skipped) ──────────────
+# orion, utm, betterdisplay, applite, iterm2, colima, pinentry-mac
+# llmfit — couldn't confirm an AUR package exists, check `paru -Ss llmfit` before adding

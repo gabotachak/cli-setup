@@ -1,8 +1,9 @@
 # cli-setup
 
-> Personal macOS shell configuration and one-step bootstrap.
+> Personal shell configuration and one-step bootstrap — macOS and Arch Linux (CachyOS).
 
 ![macOS](https://img.shields.io/badge/macOS-Tahoe-000000?logo=apple&logoColor=white)
+![Arch Linux](https://img.shields.io/badge/Arch_Linux-CachyOS-1793D1?logo=archlinux&logoColor=white)
 ![Fish Shell](https://img.shields.io/badge/Fish_Shell-4.7-4aae47?logo=gnubash&logoColor=white)
 ![Zsh](https://img.shields.io/badge/Zsh-5.9-89e051?logo=gnubash&logoColor=white)
 ![Homebrew](https://img.shields.io/badge/Homebrew-darkred?logo=homebrew&logoColor=white)
@@ -19,12 +20,19 @@ cli-setup/
 │   ├── .zshrc       # Zsh config (Oh My Zsh + Powerlevel10k)
 │   └── .zprofile    # Homebrew + JetBrains Toolbox PATH
 ├── fish/
-│   ├── config.fish           # Fish config (Tide prompt)
-│   └── functions/
+│   ├── config.fish           # Fish config (macOS, Tide prompt)
+│   └── functions/            # Shared git helper functions (mac + arch)
 │       └── gac.fish          # git add . && git commit -m
-└── mac/
-    ├── Brewfile     # All formulae + casks
-    └── setup.sh     # One-step bootstrap script
+├── mac/
+│   ├── Brewfile         # All formulae + casks
+│   ├── setup.sh         # One-step bootstrap script
+│   └── setup-keys.sh    # SSH + GPG setup for GitHub
+└── arch/
+    ├── pacman.txt        # Official repo packages (Arch/CachyOS)
+    ├── aur.txt           # AUR packages (via paru)
+    ├── fish/config.fish  # Fish config (Arch, CachyOS theming)
+    ├── setup.sh          # One-step bootstrap script
+    └── setup-keys.sh     # SSH + GPG setup for GitHub
 ```
 
 ---
@@ -55,24 +63,45 @@ tide configure
 
 ---
 
+## Fresh Arch Linux Setup (CachyOS)
+
+```bash
+git clone git@github.com:gabotachak/cli-setup.git ~/Repos/cli-setup
+bash ~/Repos/cli-setup/arch/setup.sh
+```
+
+The script will:
+1. Install `base-devel` + `git` (needed to build AUR packages)
+2. Install `paru` (AUR helper)
+3. Install all packages from `pacman.txt`
+4. Install all packages from `aur.txt`
+5. Symlink Fish config (reuses the same `fish/functions/` as macOS)
+6. Set Fish as default shell
+7. Add your user to the `docker` group
+
+> Needs an interactive terminal — `sudo`/AUR builds prompt for a password and confirmations, so run it directly rather than through a non-interactive shell.
+
+---
+
 ## SSH + GPG Setup
 
 Interactive assistant — you only need to paste the generated keys into GitHub.
 
 ```bash
-bash ~/github.com/gabotachak/cli-setup/mac/setup-keys.sh
+bash ~/github.com/gabotachak/cli-setup/mac/setup-keys.sh     # macOS
+bash ~/Repos/cli-setup/arch/setup-keys.sh                    # Arch Linux
 ```
 
 The script will:
 1. Generate an **Ed25519 SSH key** (if none exists)
-2. Configure `~/.ssh/config` for macOS Keychain
+2. Configure `~/.ssh/config` (macOS Keychain integration on the mac variant)
 3. Open GitHub SSH settings → you paste the key
 4. Test the SSH connection
-5. Generate a **GPG key** (Ed25519, via macOS passphrase dialog)
+5. Generate a **GPG key** (Ed25519, via a passphrase dialog — `pinentry-mac` on macOS, `pinentry` on Arch)
 6. Configure git to auto-sign all commits + tags
 7. Open GitHub GPG settings → you paste the key
 
-> Requires `gnupg` and `pinentry-mac` (included in Brewfile).
+> macOS needs `gnupg` + `pinentry-mac` (in `Brewfile`); Arch needs `gnupg` + `pinentry` (in `pacman.txt`).
 
 ---
 
