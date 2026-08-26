@@ -2,7 +2,7 @@
 # setup.sh — Bootstrap a fresh Arch/CachyOS box
 # Usage: bash setup.sh        → interactive menu
 #        bash setup.sh all    → run all steps
-#        bash setup.sh <1-7>  → run single step
+#        bash setup.sh <1-8>  → run single step
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,6 +12,13 @@ FISH_PATH="$(command -v fish || echo /usr/bin/fish)"
 info()    { echo "  [→] $*"; }
 success() { echo "  [✓] $*"; }
 warn()    { echo "  [!] $*"; }
+
+start_sudo_keepalive() {
+  sudo -v
+  ( while true; do sudo -n true; sleep 60; kill -0 "$$" 2>/dev/null || exit; done ) &
+  SUDO_KEEPALIVE_PID=$!
+  trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
+}
 
 banner() {
   echo ""
@@ -107,7 +114,7 @@ step_symlink() {
 step_default() {
   if [[ "$SHELL" != "$FISH_PATH" ]]; then
     info "Setting Fish as default shell..."
-    chsh -s "$FISH_PATH"
+    sudo usermod -s "$FISH_PATH" "$USER"
     success "Fish set as default shell (takes effect next login)"
   else
     success "Fish already default shell"
@@ -125,6 +132,25 @@ step_docker_group() {
   fi
 }
 
+step_claude_plugins() {
+  info "Checking Claude Code plugins..."
+  if ! claude plugin list 2>/dev/null | grep -q "caveman"; then
+    info "Installing caveman plugin..."
+    curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash
+    success "caveman installed"
+  else
+    success "caveman already installed"
+  fi
+
+  if [[ ! -d "$HOME/.agents/skills/find-skills" ]]; then
+    info "Installing find-skills..."
+    (cd "$HOME" && npx skills add https://github.com/vercel-labs/skills --skill find-skills)
+    success "find-skills installed"
+  else
+    success "find-skills already installed"
+  fi
+}
+
 run_all() {
   step_base
   step_paru
@@ -133,18 +159,20 @@ run_all() {
   step_symlink
   step_default
   step_docker_group
+  step_claude_plugins
 }
 
 run_step() {
   case "$1" in
-    1) step_base         ;;
-    2) step_paru          ;;
-    3) step_pacman_bundle ;;
-    4) step_aur_bundle    ;;
-    5) step_symlink       ;;
-    6) step_default       ;;
-    7) step_docker_group  ;;
-    *) warn "Invalid step: $1 (valid: 1-7)"; return 1 ;;
+    1) step_base          ;;
+    2) step_paru           ;;
+    3) step_pacman_bundle  ;;
+    4) step_aur_bundle     ;;
+    5) step_symlink        ;;
+    6) step_default        ;;
+    7) step_docker_group   ;;
+    8) step_claude_plugins ;;
+    *) warn "Invalid step: $1 (valid: 1-8)"; return 1 ;;
   esac
 }
 
@@ -156,6 +184,7 @@ show_menu() {
   echo "  5) Symlink Fish config"
   echo "  6) Set Fish as default shell"
   echo "  7) Add user to docker group"
+  echo "  8) Claude Code plugins (caveman, find-skills)"
   echo "  a) Run all steps"
   echo "  q) Quit"
   echo ""
@@ -164,13 +193,14 @@ show_menu() {
 # ── Main ──────────────────────────────────────────────────────
 
 banner
+start_sudo_keepalive
 
 case "${1:-}" in
   all)
     run_all
     done_footer
     ;;
-  [1-7])
+  [1-8])
     run_step "$1"
     ;;
   "")
@@ -179,7 +209,7 @@ case "${1:-}" in
       read -rp "  Select: " choice
       echo ""
       case "$choice" in
-        [1-7]) run_step "$choice" ;;
+        [1-8]) run_step "$choice" ;;
         a)     run_all ;;
         q)     break ;;
         *)     warn "Invalid choice: $choice" ;;
@@ -190,7 +220,7 @@ case "${1:-}" in
     ;;
   *)
     warn "Unknown argument: $1"
-    echo "  Usage: bash setup.sh [all|1-7]"
+    echo "  Usage: bash setup.sh [all|1-8]"
     exit 1
     ;;
 esac

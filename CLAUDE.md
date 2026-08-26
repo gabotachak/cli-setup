@@ -24,7 +24,7 @@ cli-setup/
     ├── pacman.txt    # Official Arch/CachyOS repo packages
     ├── aur.txt       # AUR packages (installed via paru)
     ├── fish/config.fish  # Fish config — Arch equivalent of ../fish/config.fish
-    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-7)
+    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-8)
     └── setup-keys.sh # Interactive SSH + GPG key setup for GitHub (Arch variant)
 ```
 
@@ -42,7 +42,7 @@ bash mac/setup-keys.sh     # macOS SSH + GPG key generation, signs commits/tags 
 
 bash arch/setup.sh        # Arch interactive menu
 bash arch/setup.sh all    # run all arch bootstrap steps
-bash arch/setup.sh <1-7>  # run a single arch step (see show_menu in arch/setup.sh)
+bash arch/setup.sh <1-8>  # run a single arch step (see show_menu in arch/setup.sh)
 bash arch/setup-keys.sh   # Arch SSH + GPG key generation, signs commits/tags globally
 ```
 

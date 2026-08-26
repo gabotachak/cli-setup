@@ -18,6 +18,8 @@ zen-browser-bin
 visual-studio-code-bin
 windsurf
 warp-terminal-bin
+antigravity-ide
+antigravity-cli
 
 # ── Dev tools ────────────────────────────────────────────────
 bruno-bin
@@ -31,6 +33,7 @@ onlyoffice-bin
 teams-for-linux
 zoom
 slack-desktop
+zapzap
 
 # ── Media / Entertainment ────────────────────────────────────
 spotify

@@ -21,6 +21,13 @@ ollama
 
 # ── Media ────────────────────────────────────────────────────
 ffmpeg
+vlc
+
+# ── Gaming ───────────────────────────────────────────────────
+steam
+heroic-games-launcher-bin
+proton-cachyos-native
+proton-cachyos-slr
 
 # ── Shell / CLI ──────────────────────────────────────────────
 fish
@@ -36,11 +43,12 @@ tk
 zlib
 libb2
 texlive-basic
+inter-font
+adobe-source-serif-fonts
 
 # ── Apps ─────────────────────────────────────────────────────
 obsidian
 discord
 audacity
 obs-studio
-steam
 solaar
