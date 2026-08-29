@@ -2,7 +2,7 @@
 # setup.sh — Bootstrap a fresh Arch/CachyOS box
 # Usage: bash setup.sh        → interactive menu
 #        bash setup.sh all    → run all steps
-#        bash setup.sh <1-8>  → run single step
+#        bash setup.sh <1-7>  → run single step
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -44,13 +44,15 @@ done_footer() {
 
 # Install every non-comment/non-blank line of a package list, one at a time,
 # so one wrong/renamed AUR package doesn't abort the rest.
+# $1 = list file, $2.. = install command the package name is appended to.
 install_list() {
-  local installer=$1 list=$2
+  local list=$1; shift
+  local -a cmd=("$@")
   local failed=()
   while IFS= read -r pkg; do
     pkg="$(echo "$pkg" | sed 's/#.*//' | xargs)"
     [[ -z "$pkg" ]] && continue
-    if $installer --needed --noconfirm -S "$pkg"; then
+    if "${cmd[@]}" "$pkg"; then
       success "$pkg"
     else
       warn "Failed: $pkg"
@@ -70,21 +72,6 @@ step_base() {
   success "base-devel ready"
 }
 
-step_paru() {
-  info "Checking paru (AUR helper)..."
-  if command -v paru &>/dev/null; then
-    success "paru already installed"
-    return
-  fi
-  info "Building paru from AUR..."
-  local tmp
-  tmp="$(mktemp -d)"
-  git clone https://aur.archlinux.org/paru.git "$tmp/paru"
-  (cd "$tmp/paru" && makepkg -si --noconfirm)
-  rm -rf "$tmp"
-  success "paru installed"
-}
-
 step_pacman_bundle() {
   info "Installing packages from pacman.txt..."
   # -Syu, never -Sy alone: a partial upgrade (new pkg against a stale db) can
@@ -94,12 +81,12 @@ step_pacman_bundle() {
 }
 
 step_aur_bundle() {
-  if ! command -v paru &>/dev/null; then
-    warn "paru not installed — run step 2 first"
+  if ! command -v shelly &>/dev/null; then
+    warn "shelly not found — it ships with CachyOS; install it before this step"
     return 1
   fi
-  info "Installing packages from aur.txt (this can take a while, builds from source)..."
-  install_list paru "$SCRIPT_DIR/aur.txt"
+  info "Installing packages from aur.txt via shelly (builds from source, slow)..."
+  install_list "$SCRIPT_DIR/aur.txt" shelly install aur --no-confirm
   success "AUR packages installed"
 }
 
@@ -155,7 +142,6 @@ step_claude_plugins() {
 
 run_all() {
   step_base
-  step_paru
   step_pacman_bundle
   step_aur_bundle
   step_symlink
@@ -167,26 +153,24 @@ run_all() {
 run_step() {
   case "$1" in
     1) step_base          ;;
-    2) step_paru           ;;
-    3) step_pacman_bundle  ;;
-    4) step_aur_bundle     ;;
-    5) step_symlink        ;;
-    6) step_default        ;;
-    7) step_docker_group   ;;
-    8) step_claude_plugins ;;
-    *) warn "Invalid step: $1 (valid: 1-8)"; return 1 ;;
+    2) step_pacman_bundle  ;;
+    3) step_aur_bundle     ;;
+    4) step_symlink        ;;
+    5) step_default        ;;
+    6) step_docker_group   ;;
+    7) step_claude_plugins ;;
+    *) warn "Invalid step: $1 (valid: 1-7)"; return 1 ;;
   esac
 }
 
 show_menu() {
   echo "  1) base-devel + git"
-  echo "  2) paru (AUR helper)"
-  echo "  3) pacman bundle (official packages)"
-  echo "  4) AUR bundle"
-  echo "  5) Symlink Fish config"
-  echo "  6) Set Fish as default shell"
-  echo "  7) Add user to docker group"
-  echo "  8) Claude Code plugins (caveman, find-skills)"
+  echo "  2) pacman bundle (official packages)"
+  echo "  3) AUR bundle (via shelly)"
+  echo "  4) Symlink Fish config"
+  echo "  5) Set Fish as default shell"
+  echo "  6) Add user to docker group"
+  echo "  7) Claude Code plugins (caveman, find-skills)"
   echo "  a) Run all steps"
   echo "  q) Quit"
   echo ""
@@ -202,7 +186,7 @@ case "${1:-}" in
     run_all
     done_footer
     ;;
-  [1-8])
+  [1-7])
     run_step "$1"
     ;;
   "")
@@ -211,7 +195,7 @@ case "${1:-}" in
       read -rp "  Select: " choice
       echo ""
       case "$choice" in
-        [1-8]) run_step "$choice" ;;
+        [1-7]) run_step "$choice" ;;
         a)     run_all ;;
         q)     break ;;
         *)     warn "Invalid choice: $choice" ;;
@@ -222,7 +206,7 @@ case "${1:-}" in
     ;;
   *)
     warn "Unknown argument: $1"
-    echo "  Usage: bash setup.sh [all|1-8]"
+    echo "  Usage: bash setup.sh [all|1-7]"
     exit 1
     ;;
 esac

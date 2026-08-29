@@ -29,7 +29,7 @@ cli-setup/
 │   └── setup-keys.sh    # SSH key + commit signing (SSH)
 └── arch/
     ├── pacman.txt        # Official repo packages (Arch/CachyOS)
-    ├── aur.txt           # AUR packages (via paru)
+    ├── aur.txt           # AUR packages (via shelly)
     ├── fish/config.fish  # Fish config (Arch, CachyOS theming)
     ├── setup.sh          # One-step bootstrap script
     └── setup-keys.sh     # SSH key + commit signing (SSH)
@@ -72,12 +72,12 @@ bash ~/Repos/cli-setup/arch/setup.sh
 
 The script will:
 1. Install `base-devel` + `git` (needed to build AUR packages)
-2. Install `paru` (AUR helper)
-3. Install all packages from `pacman.txt`
-4. Install all packages from `aur.txt`
-5. Symlink Fish config (reuses the same `fish/functions/` as macOS)
-6. Set Fish as default shell
-7. Add your user to the `docker` group
+2. Install all packages from `pacman.txt` (`pacman -Syu`)
+3. Install all packages from `aur.txt` (`shelly install aur`, ships with CachyOS)
+4. Symlink Fish config (reuses the same `fish/functions/` as macOS)
+5. Set Fish as default shell
+6. Add your user to the `docker` group
+7. Install Claude Code plugins (caveman, find-skills)
 
 > Needs an interactive terminal — `sudo`/AUR builds prompt for a password and confirmations, so run it directly rather than through a non-interactive shell.
 

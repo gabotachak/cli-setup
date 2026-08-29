@@ -22,9 +22,9 @@ cli-setup/
 │   └── setup-keys.sh # Interactive SSH key + SSH commit-signing setup
 └── arch/
     ├── pacman.txt    # Official Arch/CachyOS repo packages
-    ├── aur.txt       # AUR packages (installed via paru)
+    ├── aur.txt       # AUR packages (installed via `shelly install aur`)
     ├── fish/config.fish  # Fish config — Arch equivalent of ../fish/config.fish
-    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-8)
+    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-7)
     └── setup-keys.sh # Interactive SSH key + SSH commit-signing setup (Arch)
 ```
 
@@ -42,16 +42,16 @@ bash mac/setup-keys.sh     # macOS SSH key + SSH commit signing, signs commits/t
 
 bash arch/setup.sh        # Arch interactive menu
 bash arch/setup.sh all    # run all arch bootstrap steps
-bash arch/setup.sh <1-8>  # run a single arch step (see show_menu in arch/setup.sh)
+bash arch/setup.sh <1-7>  # run a single arch step (see show_menu in arch/setup.sh)
 bash arch/setup-keys.sh   # Arch SSH key + SSH commit signing, signs commits/tags globally
 ```
 
-`mac/*.sh` use `set -euo pipefail` — a broken step aborts the whole run. `arch/setup.sh` intentionally drops `-e` and installs AUR/pacman packages one-at-a-time (see `install_list`) so one wrong/renamed package doesn't abort the whole bundle — it reports failures at the end instead. Both need an interactive terminal (`sudo` / AUR build prompts), so they're meant to be run directly by a user, not piped or run non-interactively.
+`mac/*.sh` use `set -euo pipefail` — a broken step aborts the whole run. `arch/setup.sh` intentionally drops `-e`; `pacman.txt` installs as one batch (`pacman -Syu`), but `aur.txt` goes through `install_list` one package at a time (`shelly install aur`) so one wrong/renamed AUR package doesn't abort the rest — failures are reported at the end. Both need an interactive terminal (`sudo` / AUR build prompts), so they're meant to be run directly by a user, not piped or run non-interactively.
 
 ## Architecture notes
 
 - **Fish is primary, zsh is fallback.** Aliases/functions are duplicated across both (e.g. `gp`, `gpl`, `gc`, `gnew`, `gac`) — when adding a git shortcut, add it to both `fish/config.fish`/`fish/functions/` and `zsh/.zshrc` unless it's fish-only.
-- **Fish functions are one-per-file** under `fish/functions/`, named after the function. Files prefixed with `_` (e.g. `_gc.fish`, `_bl.fish`) are internal helpers composed by other functions — e.g. `_bl` (branch + push new) and `_br` (checkout + merge existing) both call `_gc` and `_get_primary_branch`. `_get_primary_branch` caches the resolved default branch (main/master) for 60s in global fish variables to avoid repeated `git symbolic-ref` calls.
+- **Fish functions are one-per-file** under `fish/functions/`, named after the function. Files prefixed with `_` (e.g. `_gc.fish`, `_bl.fish`) are internal helpers composed by other functions — e.g. `_bl` (branch + push new) and `_br` (checkout + merge existing) both call `_gc` and `_get_primary_branch`. `_get_primary_branch` resolves the default branch (main/master) via `git symbolic-ref` on each call — no cache, since it's a local file read and a cache not keyed per repo returns the wrong branch after `cd`.
 - **`setup.sh` step order matters**: Xcode CLT → Homebrew → Brewfile bundle → add Fish to `/etc/shells` → Fisher + Tide install → symlink Fish config → set Fish as default shell. `step_symlink` symlinks (not copies) `fish/config.fish` and every file in `fish/functions/` into `~/.config/fish/`, so edits to files in this repo take effect immediately on a machine that already ran setup.
 - **`setup-keys.sh`** is separate from `setup.sh` (not run by `all`) — an interactive flow that generates one Ed25519 SSH key and uses it for BOTH GitHub auth and commit signing (no GPG): SSH key → paste to GitHub as Authentication key → confirm → `git config --global gpg.format ssh` + `user.signingkey <key>.pub` + `commit.gpgsign true` / `tag.gpgsign true` + `~/.config/git/allowed_signers` → paste the same key to GitHub again as a Signing key. This matches the SSH-signing setup in the `hyprland-config` repo; keep them consistent.
 - **Brewfile / pacman.txt / aur.txt are grouped by purpose** (Dev tools / Containers / AI-ML / Media / Shell-CLI / Misc / Apps, apps further grouped by Browsers/Editors/Dev tools/Productivity/Communication/Media/Utilities/Game dev/Fonts) — keep new entries under the matching group rather than appending to the end. When adding an app, add it to the Brewfile group AND the pacman.txt/aur.txt equivalent group so the two package managers stay in sync; some macOS casks have no Arch port (orion, utm, betterdisplay, applite, iterm2, colima, pinentry-mac) — those are listed as a skipped comment block at the bottom of `aur.txt` rather than silently omitted.
