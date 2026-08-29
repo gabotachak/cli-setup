@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-Personal shell configuration + one-step bootstrap ("dotfiles" repo) for macOS and Arch Linux (CachyOS). No build system, no tests, no package.json — just shell config files and bash setup scripts that get symlinked/run on a fresh machine.
+Personal shell configuration + CLI-toolchain bootstrap ("dotfiles" repo) for macOS and Arch Linux (CachyOS). No build system, no tests, no package.json — just shell config files and bash setup scripts that get symlinked/run on a fresh machine.
+
+**CLI only.** GUI apps, fonts and gaming packages do NOT belong here — on Arch they live in the `hyprland-config` repo's `system/packages.txt` (a full `pacman -Qqe` machine dump). `arch/pacman.txt` and `arch/aur.txt` carry only command-line tools and build deps. (The macOS `Brewfile` still carries `cask` GUI apps for now, since there's no macOS machine-dump repo.)
 
 ## Structure
 
@@ -54,7 +56,9 @@ bash arch/setup-keys.sh   # Arch SSH key + SSH commit signing, signs commits/tag
 - **Fish functions are one-per-file** under `fish/functions/`, named after the function. Files prefixed with `_` (e.g. `_gc.fish`, `_bl.fish`) are internal helpers composed by other functions — e.g. `_bl` (branch + push new) and `_br` (checkout + merge existing) both call `_gc` and `_get_primary_branch`. `_get_primary_branch` resolves the default branch (main/master) via `git symbolic-ref` on each call — no cache, since it's a local file read and a cache not keyed per repo returns the wrong branch after `cd`.
 - **`setup.sh` step order matters**: Xcode CLT → Homebrew → Brewfile bundle → add Fish to `/etc/shells` → Fisher + Tide install → symlink Fish config → set Fish as default shell. `step_symlink` symlinks (not copies) `fish/config.fish` and every file in `fish/functions/` into `~/.config/fish/`, so edits to files in this repo take effect immediately on a machine that already ran setup.
 - **`setup-keys.sh`** is separate from `setup.sh` (not run by `all`) — an interactive flow that generates one Ed25519 SSH key and uses it for BOTH GitHub auth and commit signing (no GPG): SSH key → paste to GitHub as Authentication key → confirm → `git config --global gpg.format ssh` + `user.signingkey <key>.pub` + `commit.gpgsign true` / `tag.gpgsign true` + `~/.config/git/allowed_signers` → paste the same key to GitHub again as a Signing key. This matches the SSH-signing setup in the `hyprland-config` repo; keep them consistent.
-- **Brewfile / pacman.txt / aur.txt are grouped by purpose** (Dev tools / Containers / AI-ML / Media / Shell-CLI / Misc / Apps, apps further grouped by Browsers/Editors/Dev tools/Productivity/Communication/Media/Utilities/Game dev/Fonts) — keep new entries under the matching group rather than appending to the end. When adding an app, add it to the Brewfile group AND the pacman.txt/aur.txt equivalent group so the two package managers stay in sync; some macOS casks have no Arch port (orion, utm, betterdisplay, applite, iterm2, colima, pinentry-mac) — those are listed as a skipped comment block at the bottom of `aur.txt` rather than silently omitted.
+- **Package lists are grouped by purpose** — keep new entries under the matching group rather than appending to the end.
+  - `arch/pacman.txt` / `arch/aur.txt`: **CLI only** (Dev tools / Containers / AI-ML / Shell-CLI / build deps). A GUI app request goes to the `hyprland-config` repo, not here.
+  - `mac/Brewfile`: `brew` formulae grouped like the arch lists, plus a `cask` section (GUI apps) grouped Browsers/Editors/Dev tools/Productivity/Communication/Media/Utilities/Fonts. macOS-only, since there's no macOS machine-dump repo.
 
 ## Conventions to follow when editing
 

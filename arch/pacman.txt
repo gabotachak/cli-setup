@@ -1,5 +1,7 @@
-# pacman.txt — official repo packages (Arch/CachyOS)
+# pacman.txt — official repo CLI packages (Arch/CachyOS)
 # Install: sudo pacman -S --needed - < pacman.txt   (comments/blank lines are ignored by setup.sh's loop)
+# CLI/toolchain only — GUI apps, fonts and gaming live in the hyprland-config repo's
+# system/*.txt (full machine dump), not here.
 
 # ── Dev tools ────────────────────────────────────────────────
 git-lfs
@@ -19,39 +21,18 @@ docker-compose
 # ── AI / ML ──────────────────────────────────────────────────
 ollama
 
-# ── Media ────────────────────────────────────────────────────
-ffmpeg
-vlc
-
-# ── Gaming ───────────────────────────────────────────────────
-steam
-heroic-games-launcher-bin
-proton-cachyos-native
-proton-cachyos-slr
-
 # ── Shell / CLI ──────────────────────────────────────────────
 fish
 eza
 tree
 ncdu
 fastfetch
+ffmpeg
 pandoc-cli
 typst
 
-# ── Misc ─────────────────────────────────────────────────────
+# ── Build deps (pyenv/python native modules) ─────────────────
 tk
 zlib
 libb2
 texlive-basic
-
-# ── Fonts ────────────────────────────────────────────────────
-inter-font
-adobe-source-serif-fonts
-ttf-iosevka-nerd
-
-# ── Apps ─────────────────────────────────────────────────────
-obsidian
-discord
-audacity
-obs-studio
-solaar

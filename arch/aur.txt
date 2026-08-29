@@ -1,40 +1,8 @@
-# aur.txt — AUR packages (installed via `shelly install aur` by setup.sh)
-# A wrong/renamed package here just fails that one line — setup.sh continues and reports it at the end.
+# aur.txt — AUR CLI packages (installed via `shelly install aur` by setup.sh)
+# CLI only. A wrong/renamed package here just fails that one line — setup.sh
+# continues and reports it at the end.
 
-# ── AI / ML ──────────────────────────────────────────────────
-opencode-bin
-
-# ── Shell / CLI ──────────────────────────────────────────────
-spotify-player
-speedtest-bin
-
-# ── Browsers ─────────────────────────────────────────────────
-zen-browser-bin
-helium-browser-bin
-
-# ── Editors / IDEs ───────────────────────────────────────────
-visual-studio-code-bin
-antigravity-cli
-
-# ── Dev tools ────────────────────────────────────────────────
-bruno-bin
-postman-bin
-
-# ── Productivity ─────────────────────────────────────────────
-onlyoffice-bin
-
-# ── Communication ────────────────────────────────────────────
-teams-for-linux
-zoom
-slack-desktop
-zapzap
-
-# ── Media / Entertainment ────────────────────────────────────
-spotify
-
-# ── Fonts ─────────────────────────────────────────────────────
-ttf-iosevka          # plain Iosevka is AUR-only; the -nerd variant is in extra (see pacman.txt)
-
-# ── No Arch/AUR equivalent (macOS-only, skipped) ──────────────
-# orion, utm, betterdisplay, applite, iterm2, colima, pinentry-mac
-# llmfit — couldn't confirm an AUR package exists, check `shelly search llmfit` before adding
+opencode-bin         # terminal coding agent
+antigravity-cli      # antigravity CLI
+spotify-player       # terminal Spotify client (TUI)
+speedtest-bin        # Ookla speedtest CLI

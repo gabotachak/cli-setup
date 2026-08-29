@@ -1,6 +1,6 @@
 # cli-setup
 
-> Personal shell configuration and one-step bootstrap — macOS and Arch Linux (CachyOS).
+> Personal shell config + CLI toolchain bootstrap — macOS and Arch Linux (CachyOS). No GUI apps.
 
 ![macOS](https://img.shields.io/badge/macOS-Tahoe-000000?logo=apple&logoColor=white)
 ![Arch Linux](https://img.shields.io/badge/Arch_Linux-CachyOS-1793D1?logo=archlinux&logoColor=white)
@@ -28,8 +28,8 @@ cli-setup/
 │   ├── setup.sh         # One-step bootstrap script
 │   └── setup-keys.sh    # SSH key + commit signing (SSH)
 └── arch/
-    ├── pacman.txt        # Official repo packages (Arch/CachyOS)
-    ├── aur.txt           # AUR packages (via shelly)
+    ├── pacman.txt        # Official repo CLI packages (Arch/CachyOS)
+    ├── aur.txt           # AUR CLI packages (via shelly)
     ├── fish/config.fish  # Fish config (Arch, CachyOS theming)
     ├── setup.sh          # One-step bootstrap script
     └── setup-keys.sh     # SSH key + commit signing (SSH)
@@ -166,14 +166,8 @@ The script will:
 ![ffmpeg](https://img.shields.io/badge/FFmpeg-007808?logo=ffmpeg&logoColor=white)
 ![pandoc](https://img.shields.io/badge/pandoc-document_converter-4e4e4e)
 ![typst](https://img.shields.io/badge/Typst-markup_language-blue)
+![opencode](https://img.shields.io/badge/opencode-terminal_agent-black)
+![spotify-player](https://img.shields.io/badge/spotify--player-TUI-1DB954)
 
-### Apps
-
-![VS Code](https://img.shields.io/badge/VS_Code-007ACC?logo=visualstudiocode&logoColor=white)
-![Windsurf](https://img.shields.io/badge/Windsurf-AI_IDE-5C6BC0)
-![Obsidian](https://img.shields.io/badge/Obsidian-7C3AED?logo=obsidian&logoColor=white)
-![Brave](https://img.shields.io/badge/Brave-FB542B?logo=brave&logoColor=white)
-![Discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white)
-![Spotify](https://img.shields.io/badge/Spotify-1DB954?logo=spotify&logoColor=white)
-![UTM](https://img.shields.io/badge/UTM-VM_for_Mac-blue)
-![Unity](https://img.shields.io/badge/Unity-000000?logo=unity&logoColor=white)
+> GUI apps (browsers, editors, Discord, Spotify desktop, gaming, …) are **not** in
+> this repo — they live in the machine dump in [`hyprland-config`](https://github.com/gabotachak/hyprland-config).
