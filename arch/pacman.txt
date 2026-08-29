@@ -43,8 +43,11 @@ tk
 zlib
 libb2
 texlive-basic
+
+# ── Fonts ────────────────────────────────────────────────────
 inter-font
 adobe-source-serif-fonts
+ttf-iosevka-nerd
 
 # ── Apps ─────────────────────────────────────────────────────
 obsidian

@@ -90,6 +90,11 @@ step_symlink() {
     ln -sf "$f" "$HOME/.config/fish/functions/$(basename "$f")"
   done
   success "Fish config symlinked"
+
+  info "Symlinking zsh config (fallback shell)..."
+  ln -sf "$REPO_ROOT/zsh/.zshrc"    "$HOME/.zshrc"
+  ln -sf "$REPO_ROOT/zsh/.zprofile" "$HOME/.zprofile"
+  success "zsh config symlinked"
 }
 
 step_default() {

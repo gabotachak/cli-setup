@@ -22,7 +22,7 @@ brew "docker-compose"
 # ── AI / ML ──────────────────────────────────────────────────
 brew "ollama"
 brew "opencode"
-brew "llmfit"
+# brew "llmfit"  # not in homebrew-core; needs a tap. Uncomment once the source is known.
 
 # ── Media ────────────────────────────────────────────────────
 brew "ffmpeg"

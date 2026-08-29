@@ -87,7 +87,9 @@ step_paru() {
 
 step_pacman_bundle() {
   info "Installing packages from pacman.txt..."
-  sudo pacman -Sy --needed --noconfirm - < <(grep -vE '^\s*#|^\s*$' "$SCRIPT_DIR/pacman.txt")
+  # -Syu, never -Sy alone: a partial upgrade (new pkg against a stale db) can
+  # break the system when shared libs get out of sync.
+  sudo pacman -Syu --needed --noconfirm - < <(grep -vE '^\s*#|^\s*$' "$SCRIPT_DIR/pacman.txt")
   success "Official packages installed"
 }
 

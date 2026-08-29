@@ -7,5 +7,5 @@ function _br
     _gc $primary; and \
         git fetch origin $argv[1]; and echo "📥 Fetched from origin/$argv[1]"; and \
         git checkout $argv[1]; and \
-        git merge "origin/$argv[1]" 2>/dev/null; and echo "📍 Checked out and merged $argv[1]"
+        git merge "origin/$argv[1]"; and echo "📍 Checked out and merged $argv[1]"
 end

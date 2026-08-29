@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup-keys.sh — SSH + GPG key setup for GitHub (macOS)
+# setup-keys.sh — SSH key + SSH commit signing for GitHub (macOS)
 # Usage: bash setup-keys.sh
 set -euo pipefail
 
@@ -20,14 +20,14 @@ pause()   { read -rp "  Press Enter to continue..."; }
 
 echo ""
 box "╔══════════════════════════════════════════╗"
-box "║       SSH + GPG setup for GitHub        ║"
+box "║      SSH key + signing for GitHub       ║"
 box "╚══════════════════════════════════════════╝"
 echo ""
 
 # ── Config ─────────────────────────────────────────────────────
 step "Config"
-read -rp "  Name (for GPG):   " GIT_NAME
-read -rp "  Email (SSH + GPG): " GIT_EMAIL
+read -rp "  Name (for git):  " GIT_NAME
+read -rp "  Email (for git): " GIT_EMAIL
 
 # ════════════════════════════════════════════════════════════════
 # SSH
@@ -85,60 +85,32 @@ else
 fi
 
 # ════════════════════════════════════════════════════════════════
-# GPG
+# Commit signing — SSH (same key as above, no GPG)
 # ════════════════════════════════════════════════════════════════
-step "GPG Key"
+step "Commit signing (SSH)"
 
-# Configure pinentry-mac (macOS GUI passphrase dialog)
-mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
-cat > ~/.gnupg/gpg-agent.conf <<EOF
-pinentry-program /opt/homebrew/bin/pinentry-mac
-default-cache-ttl 3600
-max-cache-ttl 86400
-EOF
-chmod 600 ~/.gnupg/gpg-agent.conf
-
-# Restart agent so pinentry-mac takes effect
-gpgconf --kill gpg-agent 2>/dev/null || true
-sleep 1
-
-# Check for existing key
-EXISTING_KEY=$(gpg --list-secret-keys --keyid-format=long "$GIT_EMAIL" 2>/dev/null \
-  | grep sec | awk '{print $2}' | cut -d'/' -f2 | head -1 || true)
-
-if [[ -n "$EXISTING_KEY" ]]; then
-  warn "GPG key already exists: $EXISTING_KEY — skipping generation"
-  GPG_KEY_ID="$EXISTING_KEY"
-else
-  info "Generating GPG key (Ed25519) — a passphrase dialog will appear..."
-  gpg --quick-generate-key "$GIT_NAME <$GIT_EMAIL>" ed25519 sign 0
-
-  GPG_KEY_ID=$(gpg --list-secret-keys --keyid-format=long "$GIT_EMAIL" 2>/dev/null \
-    | grep sec | awk '{print $2}' | cut -d'/' -f2 | head -1)
-  success "GPG key generated: $GPG_KEY_ID"
-fi
-
-# Configure git globally
 git config --global user.name       "$GIT_NAME"
 git config --global user.email      "$GIT_EMAIL"
-git config --global user.signingkey "$GPG_KEY_ID"
+git config --global gpg.format      ssh
+git config --global user.signingkey "$SSH_KEY.pub"
 git config --global commit.gpgsign  true
 git config --global tag.gpgsign     true
-success "Git configured: all commits + tags auto-signed"
+
+# allowed_signers: lets `git log --show-signature` verify locally
+SIGNERS="$HOME/.config/git/allowed_signers"
+mkdir -p "$(dirname "$SIGNERS")"
+SIGNER_LINE="$GIT_EMAIL $(cat "$SSH_KEY.pub")"
+grep -qxF "$SIGNER_LINE" "$SIGNERS" 2>/dev/null || echo "$SIGNER_LINE" >> "$SIGNERS"
+git config --global gpg.ssh.allowedSignersFile "$SIGNERS"
+success "Git configured: SSH-signed commits + tags (key: $SSH_KEY.pub)"
 
 echo ""
-echo -e "  ${BOLD}┌─── Paste this into GitHub → Settings → GPG keys ───────────┐${NC}"
-echo ""
-gpg --armor --export "$GPG_KEY_ID"
-echo ""
-echo -e "  ${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
-echo ""
-
-info "Opening GitHub GPG settings..."
-open "https://github.com/settings/gpg/new"
+warn "GitHub needs this SAME key added a SECOND time, as a Signing key."
+info "Opening GitHub SSH settings..."
+open "https://github.com/settings/ssh/new"
 
 echo ""
-warn "Paste the full key block (including BEGIN/END lines) → Add GPG key."
+warn "Paste the key above again → Key type: Signing key → Add SSH key."
 pause
 
 # ════════════════════════════════════════════════════════════════
@@ -149,9 +121,8 @@ box "╔════════════════════════
 box "║            Setup complete! ✓            ║"
 box "╚══════════════════════════════════════════╝"
 echo ""
-echo "  SSH key:    $SSH_KEY.pub"
-echo "  GPG key ID: $GPG_KEY_ID"
-echo "  Git signing: enabled (commits + tags)"
+echo "  SSH key:     $SSH_KEY.pub  (add to GitHub twice: Authentication + Signing)"
+echo "  Git signing: SSH, enabled (commits + tags)"
 echo ""
 echo "  Verify a signed commit:"
 echo "    git log --show-signature -1"

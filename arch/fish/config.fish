@@ -11,17 +11,20 @@ end
 fish_add_path $HOME/.local/bin $HOME/bin
 
 # Mise
-mise activate fish | source
+if command -sq mise
+    mise activate fish | source
+end
 
 # Environment
 set -gx GPG_TTY (tty)
 set -gx DOCKER_BUILDKIT 1
 set -gx GITROOT $HOME/development
 
-# SSH agent (autostart + load key)
+# SSH agent: one agent on a fixed socket, shared across shells (no per-shell spawn).
+# Keys load on first use via `AddKeysToAgent yes` in ~/.ssh/config.
 if not set -q SSH_AUTH_SOCK
-    eval (ssh-agent -c) > /dev/null
-    ssh-add ~/.ssh/id_ed25519 2>/dev/null
+    set -gx SSH_AUTH_SOCK $XDG_RUNTIME_DIR/ssh-agent.socket
+    test -S $SSH_AUTH_SOCK; or ssh-agent -a $SSH_AUTH_SOCK >/dev/null 2>&1
 end
 
 # Interactive-only config

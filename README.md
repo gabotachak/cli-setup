@@ -26,13 +26,13 @@ cli-setup/
 ├── mac/
 │   ├── Brewfile         # All formulae + casks
 │   ├── setup.sh         # One-step bootstrap script
-│   └── setup-keys.sh    # SSH + GPG setup for GitHub
+│   └── setup-keys.sh    # SSH key + commit signing (SSH)
 └── arch/
     ├── pacman.txt        # Official repo packages (Arch/CachyOS)
     ├── aur.txt           # AUR packages (via paru)
     ├── fish/config.fish  # Fish config (Arch, CachyOS theming)
     ├── setup.sh          # One-step bootstrap script
-    └── setup-keys.sh     # SSH + GPG setup for GitHub
+    └── setup-keys.sh     # SSH key + commit signing (SSH)
 ```
 
 ---
@@ -83,9 +83,9 @@ The script will:
 
 ---
 
-## SSH + GPG Setup
+## SSH Key + Commit Signing
 
-Interactive assistant — you only need to paste the generated keys into GitHub.
+Interactive assistant — you only need to paste the generated key into GitHub (twice).
 
 ```bash
 bash ~/github.com/gabotachak/cli-setup/mac/setup-keys.sh     # macOS
@@ -95,13 +95,13 @@ bash ~/Repos/cli-setup/arch/setup-keys.sh                    # Arch Linux
 The script will:
 1. Generate an **Ed25519 SSH key** (if none exists)
 2. Configure `~/.ssh/config` (macOS Keychain integration on the mac variant)
-3. Open GitHub SSH settings → you paste the key
+3. Open GitHub SSH settings → you paste the key as an **Authentication key**
 4. Test the SSH connection
-5. Generate a **GPG key** (Ed25519, via a passphrase dialog — `pinentry-mac` on macOS, `pinentry` on Arch)
-6. Configure git to auto-sign all commits + tags
-7. Open GitHub GPG settings → you paste the key
+5. Configure git to **SSH-sign** all commits + tags with the same key (no GPG),
+   and write `~/.config/git/allowed_signers` for local verification
+6. Open GitHub SSH settings again → you paste the same key as a **Signing key**
 
-> macOS needs `gnupg` + `pinentry-mac` (in `Brewfile`); Arch needs `gnupg` + `pinentry` (in `pacman.txt`).
+> Signing uses the SSH key directly — no `gnupg`/`pinentry` needed.
 
 ---
 

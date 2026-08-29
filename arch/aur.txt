@@ -42,8 +42,7 @@ spotify
 unityhub
 
 # ── Fonts ─────────────────────────────────────────────────────
-ttf-iosevka
-ttf-iosevka-nerd
+ttf-iosevka          # plain Iosevka is AUR-only; the -nerd variant is in extra (see pacman.txt)
 
 # ── No Arch/AUR equivalent (macOS-only, skipped) ──────────────
 # orion, utm, betterdisplay, applite, iterm2, colima, pinentry-mac
