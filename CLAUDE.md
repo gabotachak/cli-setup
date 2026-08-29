@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal shell configuration + CLI-toolchain bootstrap ("dotfiles" repo) for macOS and Arch Linux (CachyOS). No build system, no tests, no package.json — just shell config files and bash setup scripts that get symlinked/run on a fresh machine.
 
-**CLI only.** GUI apps, fonts and gaming packages do NOT belong here — on Arch they live in the `hyprland-config` repo's `system/packages.txt` (a full `pacman -Qqe` machine dump). `arch/pacman.txt` and `arch/aur.txt` carry only command-line tools and build deps. (The macOS `Brewfile` still carries `cask` GUI apps for now, since there's no macOS machine-dump repo.)
+**CLI only.** GUI apps, fonts and gaming packages do NOT belong here — on Arch they live in the `hyprland-config` repo's `system/packages.txt` (a full `pacman -Qqe` machine dump). `arch/pacman.txt` and `arch/aur.txt` carry only command-line tools and build deps. On macOS there's no machine-dump repo, so GUI apps stay in this repo but split out: `mac/Brewfile` = CLI formulae, `mac/Caskfile` = GUI casks (skipped when `CLI_ONLY=1`).
 
 ## Structure
 
@@ -19,7 +19,8 @@ cli-setup/
 │   ├── config.fish           # Fish config (Tide prompt) — macOS primary shell
 │   └── functions/             # One function per file (fish convention) — shared by mac AND arch
 ├── mac/
-│   ├── Brewfile     # All brew formulae + casks
+│   ├── Brewfile     # CLI brew formulae
+│   ├── Caskfile     # GUI casks (skipped when CLI_ONLY=1)
 │   ├── setup.sh     # One-step bootstrap (menu-driven, steps 1-7)
 │   └── setup-keys.sh # Interactive SSH key + SSH commit-signing setup
 └── arch/
@@ -58,7 +59,8 @@ bash arch/setup-keys.sh   # Arch SSH key + SSH commit signing, signs commits/tag
 - **`setup-keys.sh`** is separate from `setup.sh` (not run by `all`) — an interactive flow that generates one Ed25519 SSH key and uses it for BOTH GitHub auth and commit signing (no GPG): SSH key → paste to GitHub as Authentication key → confirm → `git config --global gpg.format ssh` + `user.signingkey <key>.pub` + `commit.gpgsign true` / `tag.gpgsign true` + `~/.config/git/allowed_signers` → paste the same key to GitHub again as a Signing key. This matches the SSH-signing setup in the `hyprland-config` repo; keep them consistent.
 - **Package lists are grouped by purpose** — keep new entries under the matching group rather than appending to the end.
   - `arch/pacman.txt` / `arch/aur.txt`: **CLI only** (Dev tools / Containers / AI-ML / Shell-CLI / build deps). A GUI app request goes to the `hyprland-config` repo, not here.
-  - `mac/Brewfile`: `brew` formulae grouped like the arch lists, plus a `cask` section (GUI apps) grouped Browsers/Editors/Dev tools/Productivity/Communication/Media/Utilities/Fonts. macOS-only, since there's no macOS machine-dump repo.
+  - `mac/Brewfile`: `brew` formulae only, grouped like the arch lists.
+  - `mac/Caskfile`: GUI `cask` apps, grouped Browsers/Editors/Dev tools/Productivity/Communication/Media/Utilities/Game dev/Fonts. macOS-only (no macOS machine-dump repo). `step_bundle` installs it after `Brewfile` unless `CLI_ONLY=1`.
 
 ## Conventions to follow when editing
 

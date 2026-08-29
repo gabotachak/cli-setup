@@ -1,0 +1,50 @@
+# Caskfile — macOS GUI apps (casks only)
+# Install: brew bundle --file=Caskfile
+# CLI packages live in ./Brewfile. setup.sh installs both unless CLI_ONLY=1.
+
+# ── Browsers ─────────────────────────────────────────────────
+cask "brave-browser"
+cask "google-chrome"
+cask "orion"
+cask "zen"
+
+# ── Editors / IDEs ───────────────────────────────────────────
+cask "visual-studio-code"
+cask "windsurf"
+cask "warp"
+cask "iterm2"
+
+# ── Dev tools ────────────────────────────────────────────────
+cask "bruno"
+cask "postman"
+cask "dbeaver-community"
+cask "utm"
+
+# ── Productivity ─────────────────────────────────────────────
+cask "obsidian"
+cask "onlyoffice"
+cask "applite"
+
+# ── Communication ────────────────────────────────────────────
+cask "discord"
+cask "slack"
+cask "microsoft-teams"
+cask "zoom"
+
+# ── Media / Entertainment ────────────────────────────────────
+cask "spotify"
+cask "audacity"
+cask "obs"
+cask "steam"
+
+# ── Utilities ────────────────────────────────────────────────
+cask "betterdisplay"
+cask "logi-options+"
+cask "basictex"
+
+# ── Game dev ─────────────────────────────────────────────────
+cask "unity-hub"
+
+# ── Fonts ────────────────────────────────────────────────────
+cask "font-iosevka"
+cask "font-iosevka-nerd-font"

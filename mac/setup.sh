@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # setup.sh — Bootstrap a fresh Mac
-# Usage: bash setup.sh        → interactive menu
-#        bash setup.sh all    → run all steps
-#        bash setup.sh <1-7>  → run single step
+# Usage: bash setup.sh              → interactive menu
+#        bash setup.sh all          → run all steps
+#        bash setup.sh <1-7>        → run single step
+#        CLI_ONLY=1 bash setup.sh … → skip Caskfile (GUI apps), CLI only
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -57,9 +58,15 @@ step_homebrew() {
 }
 
 step_bundle() {
-  info "Installing packages from Brewfile..."
+  info "Installing CLI packages from Brewfile..."
   brew bundle --file="$SCRIPT_DIR/Brewfile"
-  success "All packages installed"
+  if [[ "${CLI_ONLY:-}" == "1" ]]; then
+    warn "CLI_ONLY=1 — skipping Caskfile (GUI apps)"
+  else
+    info "Installing GUI apps from Caskfile..."
+    brew bundle --file="$SCRIPT_DIR/Caskfile"
+  fi
+  success "Packages installed"
 }
 
 step_fish() {
@@ -137,7 +144,7 @@ run_step() {
 show_menu() {
   echo "  1) Xcode Command Line Tools"
   echo "  2) Homebrew"
-  echo "  3) Brew bundle (packages)"
+  echo "  3) Brew bundle (Brewfile + Caskfile)"
   echo "  4) Fish shell (/etc/shells)"
   echo "  5) Fisher + Tide"
   echo "  6) Symlink Fish config"

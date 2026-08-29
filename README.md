@@ -24,7 +24,8 @@ cli-setup/
 │   └── functions/            # Shared git helper functions (mac + arch)
 │       └── gac.fish          # git add . && git commit -m
 ├── mac/
-│   ├── Brewfile         # All formulae + casks
+│   ├── Brewfile         # CLI formulae
+│   ├── Caskfile         # GUI apps (casks) — skipped when CLI_ONLY=1
 │   ├── setup.sh         # One-step bootstrap script
 │   └── setup-keys.sh    # SSH key + commit signing (SSH)
 └── arch/
@@ -47,7 +48,7 @@ bash ~/github.com/gabotachak/cli-setup/mac/setup.sh
 The script will:
 1. Install Xcode Command Line Tools
 2. Install Homebrew
-3. Install all packages via `Brewfile`
+3. Install packages via `Brewfile` (CLI) + `Caskfile` (GUI apps; `CLI_ONLY=1` skips it)
 4. Add Fish to `/etc/shells`
 5. Install Fisher + Tide prompt
 6. Symlink all config files

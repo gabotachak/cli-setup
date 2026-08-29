@@ -1,5 +1,6 @@
-# Brewfile — macOS setup
-# Install all: brew bundle --file=Brewfile
+# Brewfile — macOS CLI packages (formulae only)
+# Install: brew bundle --file=Brewfile
+# GUI apps live in ./Caskfile.
 
 tap "homebrew/bundle"
 tap "teamookla/speedtest"
@@ -24,70 +25,19 @@ brew "ollama"
 brew "opencode"
 # brew "llmfit"  # not in homebrew-core; needs a tap. Uncomment once the source is known.
 
-# ── Media ────────────────────────────────────────────────────
-brew "ffmpeg"
-
 # ── Shell / CLI ──────────────────────────────────────────────
 brew "fish"
 brew "eza"
 brew "tree"
 brew "ncdu"
 brew "fastfetch"
+brew "ffmpeg"
 brew "pandoc"
 brew "typst"
 brew "spotify_player"
 brew "teamookla/speedtest/speedtest"
 
-# ── Misc ─────────────────────────────────────────────────────
+# ── Build deps (pyenv/python native modules) ─────────────────
 brew "tcl-tk"
 brew "zlib"
 brew "libb2"
-
-# ── Apps (casks) ─────────────────────────────────────────────
-
-# Browsers
-cask "brave-browser"
-cask "google-chrome"
-cask "orion"
-cask "zen"
-
-# Editors / IDEs
-cask "visual-studio-code"
-cask "windsurf"
-cask "warp"
-cask "iterm2"
-
-# Dev tools
-cask "bruno"
-cask "postman"
-cask "dbeaver-community"
-cask "utm"
-
-# Productivity
-cask "obsidian"
-cask "onlyoffice"
-cask "applite"
-
-# Communication
-cask "discord"
-cask "slack"
-cask "microsoft-teams"
-cask "zoom"
-
-# Media / Entertainment
-cask "spotify"
-cask "audacity"
-cask "obs"
-cask "steam"
-
-# Utilities
-cask "betterdisplay"
-cask "logi-options+"
-cask "basictex"
-
-# Game dev
-cask "unity-hub"
-
-# Fonts
-cask "font-iosevka"
-cask "font-iosevka-nerd-font"
