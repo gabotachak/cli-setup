@@ -1,11 +1,12 @@
 [user]
-	signingkey = 740ACFBFA60282D3
+	signingkey = /Users/gabotachak/.ssh/id_ed25519.pub
 	name = Gabriel Andres Anzola Tachak
 	email = hi@gabotachak.dev
 [commit]
 	gpgsign = true
 [gpg]
 	program = /opt/homebrew/bin/gpg
+	format = ssh
 [push]
 	autoSetupRemote = true
 [filter "lfs"]
@@ -13,3 +14,7 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[tag]
+	gpgsign = true
+[gpg "ssh"]
+	allowedSignersFile = /Users/gabotachak/.config/git/allowed_signers

@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
-# setup-keys.sh — SSH + GPG key setup for GitHub (Arch Linux)
+# setup-keys.sh — SSH commit signing for GitHub (Arch Linux)
+# Assumes SSH auth is already set up via `gh auth login` (git protocol: ssh) —
+# that generates ~/.ssh/id_ed25519 and registers it with GitHub as an
+# Authentication key. This script reuses that same key to sign commits/tags
+# and registers it with GitHub as a Signing key via `gh` (no GPG, no manual paste).
 # Usage: bash setup-keys.sh
 set -euo pipefail
 
-RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -16,7 +19,6 @@ success() { echo -e "${GREEN}  [✓]${NC} $*"; }
 warn()    { echo -e "${YELLOW}  [!]${NC} $*"; }
 step()    { echo -e "\n${CYAN}${BOLD}══ $* ══${NC}"; }
 box()     { echo -e "${BOLD}$*${NC}"; }
-pause()   { read -rp "  Press Enter to continue..."; }
 
 open_url() {
   if command -v xdg-open &>/dev/null; then
@@ -29,7 +31,7 @@ open_url() {
 
 echo ""
 box "╔══════════════════════════════════════════╗"
-box "║       SSH + GPG setup for GitHub        ║"
+box "║       SSH commit signing for GitHub     ║"
 box "╚══════════════════════════════════════════╝"
 echo ""
 
@@ -39,57 +41,19 @@ read -rp "  Name (for git):  " GIT_NAME
 read -rp "  Email (for git): " GIT_EMAIL
 
 # ════════════════════════════════════════════════════════════════
-# SSH
+# SSH key — expected to already exist via `gh auth login`
 # ════════════════════════════════════════════════════════════════
-step "SSH Key"
+step "SSH key"
 
 SSH_KEY="$HOME/.ssh/id_ed25519"
-mkdir -p ~/.ssh && chmod 700 ~/.ssh
 
-if [[ -f "$SSH_KEY" ]]; then
-  warn "Key already exists: $SSH_KEY — skipping generation"
-else
-  info "Generating Ed25519 SSH key..."
-  ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY" -N ""
-  success "Key generated"
+if [[ ! -f "$SSH_KEY.pub" ]]; then
+  warn "No SSH key at $SSH_KEY.pub"
+  echo "  Run 'gh auth login' first (git protocol: ssh) — it generates the key"
+  echo "  and registers it with GitHub as an Authentication key."
+  exit 1
 fi
-
-if [[ ! -f ~/.ssh/config ]] || ! grep -q "github.com" ~/.ssh/config; then
-  cat >> ~/.ssh/config <<'EOF'
-
-Host github.com
-  AddKeysToAgent yes
-  IdentityFile ~/.ssh/id_ed25519
-EOF
-  chmod 600 ~/.ssh/config
-  success "~/.ssh/config updated"
-fi
-
-# Load into agent
-eval "$(ssh-agent -s)" > /dev/null
-ssh-add "$SSH_KEY"
-
-echo ""
-echo -e "  ${BOLD}┌─── Paste this into GitHub → Settings → SSH keys ───────────┐${NC}"
-echo ""
-cat "$SSH_KEY.pub"
-echo ""
-echo -e "  ${BOLD}└─────────────────────────────────────────────────────────────┘${NC}"
-echo ""
-
-info "Opening GitHub SSH settings..."
-open_url "https://github.com/settings/ssh/new"
-
-echo ""
-warn "Paste the key above → Add SSH key — then come back."
-pause
-
-info "Testing GitHub connection..."
-if ssh -o StrictHostKeyChecking=accept-new -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-  success "GitHub SSH connection works!"
-else
-  warn "Could not confirm — you can test manually: ssh -T git@github.com"
-fi
+success "Using existing key: $SSH_KEY.pub"
 
 # ════════════════════════════════════════════════════════════════
 # Commit signing — SSH (same key as above, no GPG)
@@ -111,14 +75,29 @@ grep -qxF "$SIGNER_LINE" "$SIGNERS" 2>/dev/null || echo "$SIGNER_LINE" >> "$SIGN
 git config --global gpg.ssh.allowedSignersFile "$SIGNERS"
 success "Git configured: SSH-signed commits + tags (key: $SSH_KEY.pub)"
 
-echo ""
-warn "GitHub needs this SAME key added a SECOND time, as a Signing key."
-info "Opening GitHub SSH settings..."
-open_url "https://github.com/settings/ssh/new"
+# ════════════════════════════════════════════════════════════════
+# Register the same key with GitHub as a Signing key (via gh)
+# ════════════════════════════════════════════════════════════════
+step "Register signing key with GitHub"
 
-echo ""
-warn "Paste the key above again → Key type: Signing key → Add SSH key."
-pause
+if ! command -v gh &>/dev/null; then
+  warn "gh not found — add this key manually as a Signing key:"
+  open_url "https://github.com/settings/ssh/new"
+  cat "$SSH_KEY.pub"
+else
+  LOCAL_KEY="$(awk '{print $1, $2}' "$SSH_KEY.pub")"
+  if ! gh auth status 2>&1 | grep -q "admin:ssh_signing_key"; then
+    info "Requesting the admin:ssh_signing_key scope from GitHub..."
+    gh auth refresh -h github.com -s admin:ssh_signing_key
+  fi
+  if gh ssh-key list 2>/dev/null | awk -F'\t' -v k="$LOCAL_KEY" '$2==k && $5=="signing"{f=1} END{exit !f}'; then
+    success "Signing key already registered with GitHub"
+  else
+    info "Adding key to GitHub as a Signing key..."
+    gh ssh-key add "$SSH_KEY.pub" --type signing --title "$(hostname) (signing)"
+    success "Signing key registered with GitHub"
+  fi
+fi
 
 # ════════════════════════════════════════════════════════════════
 # Done
@@ -128,8 +107,7 @@ box "╔════════════════════════
 box "║            Setup complete! ✓            ║"
 box "╚══════════════════════════════════════════╝"
 echo ""
-echo "  SSH key:     $SSH_KEY.pub  (add to GitHub twice: Authentication + Signing)"
-echo "  Git signing: SSH, enabled (commits + tags)"
+echo "  Git signing: SSH, enabled (commits + tags), key: $SSH_KEY.pub"
 echo ""
 echo "  Verify a signed commit:"
 echo "    git log --show-signature -1"
