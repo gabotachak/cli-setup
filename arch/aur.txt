@@ -1,0 +1,8 @@
+# aur.txt — AUR CLI packages (installed via `shelly install aur` by setup.sh)
+# CLI only. A wrong/renamed package here just fails that one line — setup.sh
+# continues and reports it at the end.
+
+opencode-bin         # terminal coding agent
+antigravity-cli      # antigravity CLI
+spotify-player       # terminal Spotify client (TUI)
+speedtest-bin        # Ookla speedtest CLI

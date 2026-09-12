@@ -1,0 +1,38 @@
+# pacman.txt — official repo CLI packages (Arch/CachyOS)
+# Install: sudo pacman -S --needed - < pacman.txt   (comments/blank lines are ignored by setup.sh's loop)
+# CLI/toolchain only — GUI apps, fonts and gaming live in the hyprland-config repo's
+# system/*.txt (full machine dump), not here.
+
+# ── Dev tools ────────────────────────────────────────────────
+git-lfs
+github-cli
+go
+nodejs
+npm
+mise
+gnupg
+pinentry
+
+# ── Containers ───────────────────────────────────────────────
+docker
+docker-buildx
+docker-compose
+
+# ── AI / ML ──────────────────────────────────────────────────
+ollama
+
+# ── Shell / CLI ──────────────────────────────────────────────
+fish
+eza
+tree
+ncdu
+fastfetch
+ffmpeg
+pandoc-cli
+typst
+
+# ── Build deps (pyenv/python native modules) ─────────────────
+tk
+zlib
+libb2
+texlive-basic

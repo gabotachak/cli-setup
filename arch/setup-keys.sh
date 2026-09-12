@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup-keys.sh — SSH key + SSH commit signing for GitHub (macOS)
+# setup-keys.sh — SSH + GPG key setup for GitHub (Arch Linux)
 # Usage: bash setup-keys.sh
 set -euo pipefail
 
@@ -18,9 +18,18 @@ step()    { echo -e "\n${CYAN}${BOLD}══ $* ══${NC}"; }
 box()     { echo -e "${BOLD}$*${NC}"; }
 pause()   { read -rp "  Press Enter to continue..."; }
 
+open_url() {
+  if command -v xdg-open &>/dev/null; then
+    xdg-open "$1" &>/dev/null &
+  else
+    warn "xdg-open not found — open this URL manually:"
+    echo "  $1"
+  fi
+}
+
 echo ""
 box "╔══════════════════════════════════════════╗"
-box "║      SSH key + signing for GitHub       ║"
+box "║       SSH + GPG setup for GitHub        ║"
 box "╚══════════════════════════════════════════╝"
 echo ""
 
@@ -45,13 +54,11 @@ else
   success "Key generated"
 fi
 
-# macOS Keychain config
 if [[ ! -f ~/.ssh/config ]] || ! grep -q "github.com" ~/.ssh/config; then
   cat >> ~/.ssh/config <<'EOF'
 
 Host github.com
   AddKeysToAgent yes
-  UseKeychain yes
   IdentityFile ~/.ssh/id_ed25519
 EOF
   chmod 600 ~/.ssh/config
@@ -60,7 +67,7 @@ fi
 
 # Load into agent
 eval "$(ssh-agent -s)" > /dev/null
-ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || ssh-add "$SSH_KEY"
+ssh-add "$SSH_KEY"
 
 echo ""
 echo -e "  ${BOLD}┌─── Paste this into GitHub → Settings → SSH keys ───────────┐${NC}"
@@ -71,7 +78,7 @@ echo -e "  ${BOLD}└───────────────────�
 echo ""
 
 info "Opening GitHub SSH settings..."
-open "https://github.com/settings/ssh/new"
+open_url "https://github.com/settings/ssh/new"
 
 echo ""
 warn "Paste the key above → Add SSH key — then come back."
@@ -107,7 +114,7 @@ success "Git configured: SSH-signed commits + tags (key: $SSH_KEY.pub)"
 echo ""
 warn "GitHub needs this SAME key added a SECOND time, as a Signing key."
 info "Opening GitHub SSH settings..."
-open "https://github.com/settings/ssh/new"
+open_url "https://github.com/settings/ssh/new"
 
 echo ""
 warn "Paste the key above again → Key type: Signing key → Add SSH key."
