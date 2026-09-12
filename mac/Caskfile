@@ -22,6 +22,7 @@ cask "antigravity-cli"
 cask "notion"
 cask "notion-calendar"
 cask "raycast"
+cask "claude"
 
 # ── Communication ────────────────────────────────────────────
 cask "discord"
