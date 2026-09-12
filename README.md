@@ -7,7 +7,6 @@
 ![Fish Shell](https://img.shields.io/badge/Fish_Shell-4.7-4aae47?logo=gnubash&logoColor=white)
 ![Zsh](https://img.shields.io/badge/Zsh-5.9-89e051?logo=gnubash&logoColor=white)
 ![Homebrew](https://img.shields.io/badge/Homebrew-darkred?logo=homebrew&logoColor=white)
-![Powerlevel10k](https://img.shields.io/badge/Powerlevel10k-theme-blueviolet)
 ![Tide](https://img.shields.io/badge/Tide-prompt-blue)
 
 ---
@@ -17,8 +16,8 @@
 ```
 cli-setup/
 ├── zsh/
-│   ├── .zshrc       # Zsh config (Oh My Zsh + Powerlevel10k)
-│   └── .zprofile    # Homebrew + JetBrains Toolbox PATH
+│   ├── .zshrc       # Zsh config (plain, no framework)
+│   └── .zprofile    # Homebrew PATH
 ├── fish/
 │   ├── config.fish           # Fish config (macOS, Tide prompt)
 │   └── functions/            # Shared git helper functions (mac + arch)
@@ -65,6 +64,8 @@ Steps (run all, or pick one from the menu):
 5. Install Fisher + Tide prompt
 6. Symlink Fish/zsh/git/ssh/ghostty configs + VS Code settings & extensions
 7. Set Fish as default shell
+8. Install Claude Code CLI
+9. Install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)
 
 Then open a new terminal and configure the prompt:
 ```bash
@@ -87,7 +88,8 @@ The script will:
 4. Symlink Fish config (reuses the same `fish/functions/` as macOS)
 5. Set Fish as default shell
 6. Add your user to the `docker` group
-7. Install Claude Code plugins (caveman, find-skills)
+7. Install Claude Code CLI
+8. Install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)
 
 > Needs an interactive terminal — `sudo`/AUR builds prompt for a password and confirmations, so run it directly rather than through a non-interactive shell.
 
@@ -95,7 +97,14 @@ The script will:
 
 ## SSH Key + Commit Signing
 
-Interactive assistant — you only need to paste the generated key into GitHub (twice).
+First authenticate with GitHub via `gh` — this generates `~/.ssh/id_ed25519` and
+registers it with GitHub as an **Authentication key**:
+
+```bash
+gh auth login   # choose SSH as the git protocol
+```
+
+Then run `setup-keys.sh` to reuse that same key for commit signing (no GPG):
 
 ```bash
 bash ~/github.com/gabotachak/cli-setup/mac/setup-keys.sh     # macOS
@@ -103,13 +112,11 @@ bash ~/Repos/cli-setup/arch/setup-keys.sh                    # Arch Linux
 ```
 
 The script will:
-1. Generate an **Ed25519 SSH key** (if none exists)
-2. Configure `~/.ssh/config` (macOS Keychain integration on the mac variant)
-3. Open GitHub SSH settings → you paste the key as an **Authentication key**
-4. Test the SSH connection
-5. Configure git to **SSH-sign** all commits + tags with the same key (no GPG),
+1. Verify the SSH key from `gh auth login` exists (fails with instructions if not)
+2. Configure git to **SSH-sign** all commits + tags with that key (no GPG),
    and write `~/.config/git/allowed_signers` for local verification
-6. Open GitHub SSH settings again → you paste the same key as a **Signing key**
+3. Register the same key with GitHub as a **Signing key** via `gh ssh-key add`
+   (refreshing the `admin:ssh_signing_key` scope first if needed) — no manual paste
 
 > Signing uses the SSH key directly — no `gnupg`/`pinentry` needed.
 
@@ -131,10 +138,8 @@ The script will:
 
 | Feature | How |
 |---|---|
-| Prompt | [Powerlevel10k](https://github.com/romkatv/powerlevel10k) |
-| Plugin manager | [Oh My Zsh](https://ohmyz.sh) |
-| Autosuggestions | `zsh-autosuggestions` |
-| Syntax highlighting | `zsh-syntax-highlighting` |
+| Prompt | System default |
+| Plugin manager | None (plain config) |
 
 ---
 
