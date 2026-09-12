@@ -1,0 +1,15 @@
+[user]
+	signingkey = 740ACFBFA60282D3
+	name = Gabriel Andres Anzola Tachak
+	email = hi@gabotachak.dev
+[commit]
+	gpgsign = true
+[gpg]
+	program = /opt/homebrew/bin/gpg
+[push]
+	autoSetupRemote = true
+[filter "lfs"]
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f

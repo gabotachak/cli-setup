@@ -69,6 +69,31 @@ ln -sf "$REPO_ROOT/fish/config.fish"              "$HOME/.config/fish/config.fis
 ln -sf "$REPO_ROOT/fish/functions/gac.fish"       "$HOME/.config/fish/functions/gac.fish"
 success "Fish config symlinked"
 
+info "Symlinking Git config..."
+ln -sf "$REPO_ROOT/git/.gitconfig" "$HOME/.gitconfig"
+success "Git config symlinked"
+
+info "Symlinking SSH config..."
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+ln -sf "$REPO_ROOT/ssh/config" "$HOME/.ssh/config"
+success "SSH config symlinked"
+
+info "Symlinking Ghostty config..."
+mkdir -p "$HOME/.config/ghostty"
+ln -sf "$REPO_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
+success "Ghostty config symlinked"
+
+if command -v code &>/dev/null; then
+  info "Symlinking VS Code settings..."
+  VSCODE_USER="$HOME/Library/Application Support/Code/User"
+  mkdir -p "$VSCODE_USER"
+  ln -sf "$REPO_ROOT/vscode/settings.json" "$VSCODE_USER/settings.json"
+  info "Installing VS Code extensions..."
+  while read -r ext; do code --install-extension "$ext" &>/dev/null; done < "$REPO_ROOT/vscode/extensions.txt"
+  success "VS Code configured"
+fi
+
 # ── Done ──────────────────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════╗"

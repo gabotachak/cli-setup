@@ -1,0 +1,13 @@
+{
+    "editor.fontFamily": "Iosevka",
+    "editor.fontSize": 16,
+    "workbench.iconTheme": "vscode-icons",
+    "aws.cloudformation.telemetry.enabled": true,
+    "workbench.colorTheme": "Night Owl",
+    "claudeCode.preferredLocation": "panel",
+    "files.autoSave": "afterDelay",
+    "python.languageServer": "Default",
+    "makefile.configureOnOpen": true,
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false
+}

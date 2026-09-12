@@ -1,0 +1,25 @@
+Include /Users/gabotachak/.colima/ssh_config
+
+Host personallyai.space
+  HostName personallyai.space
+  User robot
+
+Host gitlab.com
+  HostName gitlab.com
+  User git
+  IdentityFile ~/.ssh/id_ed25519_gitlab
+
+Host desktop
+  HostName 192.168.1.19
+  User gabotachak
+  IdentityFile ~/.ssh/id_ed25519
+  AddKeysToAgent yes
+  
+
+Host gitlab.apollyon.lat
+  HostName gitlab.apollyon.lat
+  User git
+  Port 2222
+  IdentityFile ~/.ssh/id_ed25519_apollyon
+  IdentitiesOnly yes
+  AddKeysToAgent yes

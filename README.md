@@ -22,6 +22,15 @@ cli-setup/
 │   ├── config.fish           # Fish config (Tide prompt)
 │   └── functions/
 │       └── gac.fish          # git add . && git commit -m
+├── git/
+│   └── .gitconfig   # user, GPG signing, LFS filter
+├── ssh/
+│   └── config       # Host aliases (no keys — generate those separately)
+├── ghostty/
+│   └── config       # Font + theme
+├── vscode/
+│   ├── settings.json
+│   └── extensions.txt
 └── mac/
     ├── Brewfile     # All formulae + casks
     └── setup.sh     # One-step bootstrap script
