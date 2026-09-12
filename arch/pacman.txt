@@ -10,6 +10,7 @@ go
 nodejs
 npm
 mise
+uv
 gnupg
 pinentry
 

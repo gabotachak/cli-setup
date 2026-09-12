@@ -2,7 +2,7 @@
 # setup.sh — Bootstrap a fresh Mac
 # Usage: bash setup.sh              → interactive menu
 #        bash setup.sh all          → run all steps
-#        bash setup.sh <1-7>        → run single step
+#        bash setup.sh <1-9>        → run single step
 #        CLI_ONLY=1 bash setup.sh … → skip Caskfile (GUI apps), CLI only
 set -euo pipefail
 
@@ -143,6 +143,69 @@ step_default() {
   fi
 }
 
+step_claude_code() {
+  info "Checking Claude Code..."
+  if ! command -v claude &>/dev/null; then
+    info "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+  fi
+  success "Claude Code ready"
+}
+
+step_claude_plugins() {
+  info "Checking Claude Code plugins..."
+  if ! claude plugin list 2>/dev/null | grep -q "caveman"; then
+    info "Installing caveman plugin..."
+    curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash
+    success "caveman installed"
+  else
+    success "caveman already installed"
+  fi
+
+  if ! claude plugin list 2>/dev/null | grep -q "ponytail"; then
+    info "Installing ponytail plugin..."
+    claude plugin marketplace add DietrichGebert/ponytail
+    claude plugin install ponytail@ponytail -y
+    success "ponytail installed"
+  else
+    success "ponytail already installed"
+  fi
+
+  if ! command -v omniroute &>/dev/null; then
+    info "Installing omniroute..."
+    npm install -g omniroute
+    success "omniroute installed"
+  else
+    success "omniroute already installed"
+  fi
+
+  if ! command -v graphify &>/dev/null; then
+    info "Installing graphify..."
+    uv tool install graphifyy
+    graphify install
+    success "graphify installed"
+  else
+    success "graphify already installed"
+  fi
+
+  if ! claude plugin list 2>/dev/null | grep -q "agent-skills"; then
+    info "Installing agent-skills plugin..."
+    claude plugin marketplace add joeblackwaslike/agent-marketplace
+    claude plugin install agent-skills -y
+    success "agent-skills installed"
+  else
+    success "agent-skills already installed"
+  fi
+
+  if [[ ! -d "$HOME/.agents/skills/find-skills" ]]; then
+    info "Installing find-skills..."
+    (cd "$HOME" && npx skills add https://github.com/vercel-labs/skills --skill find-skills)
+    success "find-skills installed"
+  else
+    success "find-skills already installed"
+  fi
+}
+
 run_all() {
   step_xcode
   step_homebrew
@@ -151,18 +214,22 @@ run_all() {
   step_fisher
   step_symlink
   step_default
+  step_claude_code
+  step_claude_plugins
 }
 
 run_step() {
   case "$1" in
-    1) step_xcode   ;;
-    2) step_homebrew ;;
-    3) step_bundle   ;;
-    4) step_fish     ;;
-    5) step_fisher   ;;
-    6) step_symlink  ;;
-    7) step_default  ;;
-    *) warn "Invalid step: $1 (valid: 1-7)"; return 1 ;;
+    1) step_xcode         ;;
+    2) step_homebrew      ;;
+    3) step_bundle        ;;
+    4) step_fish          ;;
+    5) step_fisher        ;;
+    6) step_symlink       ;;
+    7) step_default       ;;
+    8) step_claude_code   ;;
+    9) step_claude_plugins ;;
+    *) warn "Invalid step: $1 (valid: 1-9)"; return 1 ;;
   esac
 }
 
@@ -174,6 +241,8 @@ show_menu() {
   echo "  5) Fisher + Tide"
   echo "  6) Symlink Fish config"
   echo "  7) Set Fish as default shell"
+  echo "  8) Claude Code CLI"
+  echo "  9) Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)"
   echo "  a) Run all steps"
   echo "  q) Quit"
   echo ""
@@ -188,7 +257,7 @@ case "${1:-}" in
     run_all
     done_footer
     ;;
-  [1-7])
+  [1-9])
     run_step "$1"
     ;;
   "")
@@ -197,7 +266,7 @@ case "${1:-}" in
       read -rp "  Select: " choice
       echo ""
       case "$choice" in
-        [1-7]) run_step "$choice" ;;
+        [1-9]) run_step "$choice" ;;
         a)     run_all ;;
         q)     break ;;
         *)     warn "Invalid choice: $choice" ;;
@@ -208,7 +277,7 @@ case "${1:-}" in
     ;;
   *)
     warn "Unknown argument: $1"
-    echo "  Usage: bash setup.sh [all|1-7]"
+    echo "  Usage: bash setup.sh [all|1-9]"
     exit 1
     ;;
 esac

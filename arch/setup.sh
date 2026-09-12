@@ -2,7 +2,7 @@
 # setup.sh — Bootstrap a fresh Arch/CachyOS box
 # Usage: bash setup.sh        → interactive menu
 #        bash setup.sh all    → run all steps
-#        bash setup.sh <1-7>  → run single step
+#        bash setup.sh <1-8>  → run single step
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -121,6 +121,15 @@ step_docker_group() {
   fi
 }
 
+step_claude_code() {
+  info "Checking Claude Code..."
+  if ! command -v claude &>/dev/null; then
+    info "Installing Claude Code..."
+    curl -fsSL https://claude.ai/install.sh | bash
+  fi
+  success "Claude Code ready"
+}
+
 step_claude_plugins() {
   info "Checking Claude Code plugins..."
   if ! claude plugin list 2>/dev/null | grep -q "caveman"; then
@@ -129,6 +138,41 @@ step_claude_plugins() {
     success "caveman installed"
   else
     success "caveman already installed"
+  fi
+
+  if ! claude plugin list 2>/dev/null | grep -q "ponytail"; then
+    info "Installing ponytail plugin..."
+    claude plugin marketplace add DietrichGebert/ponytail
+    claude plugin install ponytail@ponytail -y
+    success "ponytail installed"
+  else
+    success "ponytail already installed"
+  fi
+
+  if ! command -v omniroute &>/dev/null; then
+    info "Installing omniroute..."
+    npm install -g omniroute
+    success "omniroute installed"
+  else
+    success "omniroute already installed"
+  fi
+
+  if ! command -v graphify &>/dev/null; then
+    info "Installing graphify..."
+    uv tool install graphifyy
+    graphify install
+    success "graphify installed"
+  else
+    success "graphify already installed"
+  fi
+
+  if ! claude plugin list 2>/dev/null | grep -q "agent-skills"; then
+    info "Installing agent-skills plugin..."
+    claude plugin marketplace add joeblackwaslike/agent-marketplace
+    claude plugin install agent-skills -y
+    success "agent-skills installed"
+  else
+    success "agent-skills already installed"
   fi
 
   if [[ ! -d "$HOME/.agents/skills/find-skills" ]]; then
@@ -147,6 +191,7 @@ run_all() {
   step_symlink
   step_default
   step_docker_group
+  step_claude_code
   step_claude_plugins
 }
 
@@ -158,8 +203,9 @@ run_step() {
     4) step_symlink        ;;
     5) step_default        ;;
     6) step_docker_group   ;;
-    7) step_claude_plugins ;;
-    *) warn "Invalid step: $1 (valid: 1-7)"; return 1 ;;
+    7) step_claude_code    ;;
+    8) step_claude_plugins ;;
+    *) warn "Invalid step: $1 (valid: 1-8)"; return 1 ;;
   esac
 }
 
@@ -170,7 +216,8 @@ show_menu() {
   echo "  4) Symlink Fish config"
   echo "  5) Set Fish as default shell"
   echo "  6) Add user to docker group"
-  echo "  7) Claude Code plugins (caveman, find-skills)"
+  echo "  7) Claude Code CLI"
+  echo "  8) Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)"
   echo "  a) Run all steps"
   echo "  q) Quit"
   echo ""
@@ -186,7 +233,7 @@ case "${1:-}" in
     run_all
     done_footer
     ;;
-  [1-7])
+  [1-8])
     run_step "$1"
     ;;
   "")
@@ -195,7 +242,7 @@ case "${1:-}" in
       read -rp "  Select: " choice
       echo ""
       case "$choice" in
-        [1-7]) run_step "$choice" ;;
+        [1-8]) run_step "$choice" ;;
         a)     run_all ;;
         q)     break ;;
         *)     warn "Invalid choice: $choice" ;;
@@ -206,7 +253,7 @@ case "${1:-}" in
     ;;
   *)
     warn "Unknown argument: $1"
-    echo "  Usage: bash setup.sh [all|1-7]"
+    echo "  Usage: bash setup.sh [all|1-8]"
     exit 1
     ;;
 esac
