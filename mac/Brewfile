@@ -1,17 +1,27 @@
 # Brewfile — macOS setup
 # Install all: brew bundle --file=Brewfile
 
-tap "homebrew/bundle"
-tap "teamookla/speedtest"
-
 # ── Dev tools ────────────────────────────────────────────────
+brew "git"
 brew "git-lfs"
 brew "gh"
+brew "glab"
 brew "go"
 brew "node"
-brew "pyenv"
 brew "gnupg"
 brew "pinentry-mac"
+brew "cocoapods"
+brew "gradle"
+brew "openjdk@21"
+brew "pipx"
+brew "uv"
+brew "ripgrep"
+brew "fd"
+brew "tree-sitter"
+brew "neovim"
+brew "tmux"
+brew "powershell"
+brew "flyctl"
 
 # ── Containers ───────────────────────────────────────────────
 brew "colima"
@@ -25,6 +35,8 @@ brew "llmfit"
 
 # ── Media ────────────────────────────────────────────────────
 brew "ffmpeg"
+brew "tesseract"
+brew "zbar"
 
 # ── Shell / CLI ──────────────────────────────────────────────
 brew "fish"
@@ -32,57 +44,66 @@ brew "eza"
 brew "tree"
 brew "ncdu"
 brew "fastfetch"
+brew "btop"
 brew "pandoc"
 brew "typst"
 brew "spotify_player"
-brew "teamookla/speedtest/speedtest"
 
-# ── Misc ─────────────────────────────────────────────────────
+# ── Libs / misc ──────────────────────────────────────────────
 brew "tcl-tk"
 brew "zlib"
 brew "libb2"
+brew "openssl@3"
+brew "readline"
+brew "xz"
+brew "zstd"
+brew "pkgconf"
+brew "sqlite"
+brew "poppler"
+brew "librsvg"
+brew "libimobiledevice"
 
 # ── Apps (casks) ─────────────────────────────────────────────
 
 # Browsers
-cask "brave-browser"
-cask "google-chrome"
-cask "orion"
 cask "zen"
+cask "helium-browser"
 
 # Editors / IDEs
 cask "visual-studio-code"
-cask "windsurf"
-cask "warp"
-cask "iterm2"
+cask "zed"
+cask "ghostty"
 
 # Dev tools
 cask "bruno"
 cask "postman"
-cask "dbeaver-community"
 cask "utm"
+cask "android-studio"
+cask "android-commandlinetools"
+cask "android-platform-tools"
+cask "antigravity-cli"
 
 # Productivity
-cask "obsidian"
-cask "onlyoffice"
-cask "applite"
+cask "notion"
+cask "notion-calendar"
 
 # Communication
 cask "discord"
 cask "slack"
 cask "microsoft-teams"
-cask "zoom"
 
 # Media / Entertainment
 cask "spotify"
 cask "audacity"
 cask "obs"
 cask "steam"
+cask "vlc"
 
 # Utilities
 cask "betterdisplay"
-cask "logi-options+"
-cask "basictex"
+cask "linearmouse"
+cask "anydesk"
+cask "homebrew-app"
 
 # Game dev
 cask "unity-hub"
@@ -90,3 +111,5 @@ cask "unity-hub"
 # Fonts
 cask "font-iosevka"
 cask "font-iosevka-nerd-font"
+cask "font-instrument-sans"
+cask "font-instrument-serif"
