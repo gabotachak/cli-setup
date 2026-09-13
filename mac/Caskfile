@@ -27,6 +27,8 @@ cask "claude"
 # ── Communication ────────────────────────────────────────────
 cask "discord"
 cask "slack"
+cask "telegram"
+cask "whatsapp"
 
 # ── Media / Entertainment ────────────────────────────────────
 cask "spotify"
