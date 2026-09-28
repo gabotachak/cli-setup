@@ -153,6 +153,8 @@ The script will:
 | `gnew` | `git checkout -b` |
 | `gac 'msg'` | `git add . && git commit -m 'msg'` |
 
+Other: `claude-work` runs Claude Code with `CLAUDE_CONFIG_DIR=$HOME/.claude-work` (second account, e.g. freelance work).
+
 ---
 
 ## Installed Tools

@@ -53,6 +53,7 @@ alias gp='git push'
 alias gpl='git pull'
 alias gnew='git checkout -b'
 alias gc='git checkout'
+alias claude-work='CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
 
 gac() {
   [[ -z "$1" ]] && { echo "Usage: gac 'commit message'"; return 1 }

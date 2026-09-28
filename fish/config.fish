@@ -28,4 +28,8 @@ if status is-interactive
     alias gc 'git checkout'
     alias docker-compose 'docker compose'
     alias amend 'git add . && git commit --amend --no-edit && git push --force-with-lease && echo "✅ Amended and pushed!"'
+    alias claude-work 'CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
 end
+
+set -gx JAVA_HOME "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+set -gx PATH $JAVA_HOME/bin $PATH
