@@ -2,7 +2,7 @@
 # setup.sh — Bootstrap a fresh Arch/CachyOS box
 # Usage: bash setup.sh        → interactive menu
 #        bash setup.sh all    → run all steps
-#        bash setup.sh <1-8>  → run single step
+#        bash setup.sh <1-9>  → run single step
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -184,6 +184,23 @@ step_claude_plugins() {
   fi
 }
 
+step_vscodium() {
+  if ! command -v codium &>/dev/null; then
+    warn "codium not found — install vscodium (hyprland-config packages.txt) first"
+    return 1
+  fi
+  info "Symlinking VSCodium settings..."
+  mkdir -p "$HOME/.config/VSCodium/User"
+  ln -sf "$REPO_ROOT/vscode/settings.json" "$HOME/.config/VSCodium/User/settings.json"
+  # Open VSX lacks Microsoft-only extensions (pylance, cpptools, remote-*, liveshare,
+  # anycode-*): those fail here and get reported. extensions-oss.txt holds their
+  # open replacements.
+  info "Installing VSCodium extensions from Open VSX..."
+  install_list "$REPO_ROOT/vscode/extensions.txt" codium --install-extension
+  install_list "$REPO_ROOT/vscode/extensions-oss.txt" codium --install-extension
+  success "VSCodium configured"
+}
+
 run_all() {
   step_base
   step_pacman_bundle
@@ -193,6 +210,7 @@ run_all() {
   step_docker_group
   step_claude_code
   step_claude_plugins
+  step_vscodium
 }
 
 run_step() {
@@ -205,7 +223,8 @@ run_step() {
     6) step_docker_group   ;;
     7) step_claude_code    ;;
     8) step_claude_plugins ;;
-    *) warn "Invalid step: $1 (valid: 1-8)"; return 1 ;;
+    9) step_vscodium       ;;
+    *) warn "Invalid step: $1 (valid: 1-9)"; return 1 ;;
   esac
 }
 
@@ -218,6 +237,7 @@ show_menu() {
   echo "  6) Add user to docker group"
   echo "  7) Claude Code CLI"
   echo "  8) Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)"
+  echo "  9) VSCodium settings + extensions"
   echo "  a) Run all steps"
   echo "  q) Quit"
   echo ""
@@ -233,7 +253,7 @@ case "${1:-}" in
     run_all
     done_footer
     ;;
-  [1-8])
+  [1-9])
     run_step "$1"
     ;;
   "")
@@ -242,7 +262,7 @@ case "${1:-}" in
       read -rp "  Select: " choice
       echo ""
       case "$choice" in
-        [1-8]) run_step "$choice" ;;
+        [1-9]) run_step "$choice" ;;
         a)     run_all ;;
         q)     break ;;
         *)     warn "Invalid choice: $choice" ;;
@@ -253,7 +273,7 @@ case "${1:-}" in
     ;;
   *)
     warn "Unknown argument: $1"
-    echo "  Usage: bash setup.sh [all|1-8]"
+    echo "  Usage: bash setup.sh [all|1-9]"
     exit 1
     ;;
 esac

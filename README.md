@@ -29,8 +29,9 @@ cli-setup/
 ├── ghostty/
 │   └── config       # Font + theme
 ├── vscode/
-│   ├── settings.json
-│   └── extensions.txt
+│   ├── settings.json       # Symlinked into VS Code (mac) and VSCodium (arch)
+│   ├── extensions.txt      # Shared list (MS-only ones fail on VSCodium)
+│   └── extensions-oss.txt  # Open VSX replacements, VSCodium only
 ├── mac/
 │   ├── Brewfile         # CLI formulae
 │   ├── Caskfile         # GUI apps (casks) — skipped when CLI_ONLY=1
@@ -90,6 +91,7 @@ The script will:
 6. Add your user to the `docker` group
 7. Install Claude Code CLI
 8. Install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)
+9. Symlink VSCodium settings + install extensions from Open VSX (`vscodium` itself comes from `hyprland-config`)
 
 > Needs an interactive terminal — `sudo`/AUR builds prompt for a password and confirmations, so run it directly rather than through a non-interactive shell.
 

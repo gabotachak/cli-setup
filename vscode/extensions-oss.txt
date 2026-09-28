@@ -1,0 +1,4 @@
+# extensions-oss.txt — Open VSX replacements for Microsoft-only extensions
+# (installed by arch/setup.sh into VSCodium, not by mac/setup.sh)
+jeanp413.open-remote-ssh
+llvm-vs-code-extensions.vscode-clangd

@@ -27,7 +27,7 @@ cli-setup/
     ├── pacman.txt    # Official Arch/CachyOS repo packages
     ├── aur.txt       # AUR packages (installed via `shelly install aur`)
     ├── fish/config.fish  # Fish config — Arch equivalent of ../fish/config.fish
-    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-8)
+    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-9)
     └── setup-keys.sh # SSH commit-signing setup (Arch, assumes `gh auth login` already ran)
 ```
 
@@ -45,7 +45,7 @@ bash mac/setup-keys.sh     # macOS SSH commit signing (run `gh auth login` first
 
 bash arch/setup.sh        # Arch interactive menu
 bash arch/setup.sh all    # run all arch bootstrap steps
-bash arch/setup.sh <1-8>  # run a single arch step (see show_menu in arch/setup.sh)
+bash arch/setup.sh <1-9>  # run a single arch step (see show_menu in arch/setup.sh)
 bash arch/setup-keys.sh   # Arch SSH commit signing (run `gh auth login` first), signs commits/tags globally
 ```
 
@@ -60,6 +60,7 @@ bash arch/setup-keys.sh   # Arch SSH commit signing (run `gh auth login` first),
 - **Package lists are grouped by purpose** — keep new entries under the matching group rather than appending to the end.
   - `arch/pacman.txt` / `arch/aur.txt`: **CLI only** (Dev tools / Containers / AI-ML / Shell-CLI / build deps). A GUI app request goes to the `hyprland-config` repo, not here.
   - `mac/Brewfile`: `brew` formulae only, grouped like the arch lists.
+  - `vscode/extensions.txt`: shared by mac (VS Code, MS marketplace) and arch (VSCodium, Open VSX). On arch the Microsoft-only entries fail and get reported — expected. `vscode/extensions-oss.txt` holds their Open VSX replacements and is arch-only. `vscode/settings.json` is symlinked on both OSes, so keep it OS-agnostic (no absolute Homebrew paths).
   - `mac/Caskfile`: GUI `cask` apps, grouped Browsers/Editors/Dev tools/Productivity/Communication/Media/Utilities/Fonts. macOS-only (no macOS machine-dump repo). `step_bundle` installs it after `Brewfile` unless `CLI_ONLY=1`.
 
 ## Conventions to follow when editing
