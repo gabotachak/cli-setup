@@ -2,3 +2,6 @@ font-family = Iosevka Nerd Font Mono
 font-size = 14
 
 theme = dark:Night Owl,light:Night Owlish Light
+
+# Per-machine overrides (optional; on Arch it comes from hyprland-config)
+config-file = ?local.conf

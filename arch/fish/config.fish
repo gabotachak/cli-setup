@@ -29,6 +29,9 @@ end
 
 # Interactive-only config
 if status is-interactive
+    # Caelestia's terminal colour scheme (it only repaints terminals already open)
+    cat $HOME/.local/state/caelestia/sequences.txt 2>/dev/null
+
     alias gp 'git push'
     alias gpl 'git pull'
     alias gnew 'git checkout -b'
