@@ -86,7 +86,7 @@ The script will:
 1. Install `base-devel` + `git` (needed to build AUR packages)
 2. Install all packages from `pacman.txt` (`pacman -Syu`)
 3. Install all packages from `aur.txt` (`shelly install aur`, ships with CachyOS)
-4. Symlink Fish config (reuses the same `fish/functions/` as macOS)
+4. Symlink Fish config (reuses the same `fish/functions/` as macOS) + Ghostty config
 5. Set Fish as default shell
 6. Add your user to the `docker` group
 7. Install Claude Code CLI

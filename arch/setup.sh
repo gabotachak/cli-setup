@@ -98,6 +98,10 @@ step_symlink() {
     ln -sf "$f" "$HOME/.config/fish/functions/$(basename "$f")"
   done
   success "Fish config symlinked"
+  info "Symlinking Ghostty config..."
+  mkdir -p "$HOME/.config/ghostty"
+  ln -sf "$REPO_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
+  success "Ghostty config symlinked"
 }
 
 step_default() {
@@ -232,7 +236,7 @@ show_menu() {
   echo "  1) base-devel + git"
   echo "  2) pacman bundle (official packages)"
   echo "  3) AUR bundle (via shelly)"
-  echo "  4) Symlink Fish config"
+  echo "  4) Symlink Fish + Ghostty config"
   echo "  5) Set Fish as default shell"
   echo "  6) Add user to docker group"
   echo "  7) Claude Code CLI"
