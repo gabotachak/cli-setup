@@ -22,7 +22,8 @@ cli-setup/
 │   ├── Brewfile     # CLI brew formulae
 │   ├── Caskfile     # GUI casks (skipped when CLI_ONLY=1)
 │   ├── setup.sh     # One-step bootstrap (menu-driven, steps 1-9)
-│   └── setup-keys.sh # SSH commit-signing setup (assumes `gh auth login` already ran)
+│   ├── setup-keys.sh # SSH commit-signing setup (assumes `gh auth login` already ran)
+│   └── REMOTE-ACCESS.md # Mac-side steps to reach the Arch PC (SSH/Moonlight) — read when asked about remote access
 └── arch/
     ├── pacman.txt    # Official Arch/CachyOS repo packages
     ├── aur.txt       # AUR packages (installed via `shelly install aur`)

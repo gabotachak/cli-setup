@@ -37,7 +37,8 @@ cli-setup/
 │   ├── Caskfile         # GUI apps (casks) — skipped when CLI_ONLY=1
 │   ├── setup.sh         # One-step bootstrap script
 │   ├── setup-keys.sh    # SSH key + commit signing (SSH)
-│   └── hygiene.sh       # Disk cleanup (dry-run by default)
+│   ├── hygiene.sh       # Disk cleanup (dry-run by default)
+│   └── REMOTE-ACCESS.md # Mac-side steps to reach the Arch PC
 └── arch/
     ├── pacman.txt        # Official repo CLI packages (Arch/CachyOS)
     ├── aur.txt           # AUR CLI packages (via shelly)
@@ -145,6 +146,8 @@ bash ~/Repos/hyprland-config/system/setup-sunshine.sh       # on the PC (desktop
 5. `ufw allow in on tailscale0` (SSH + Sunshine reachable only from the tailnet)
 6. Turns on Wake-on-LAN (magic packet) for the wired connection — also enable it in the BIOS
 7. Upserts `pc.gabotachak.dev` → Tailscale IP via the Cloudflare API (`CLOUDFLARE_API_TOKEN`, Zone:DNS:Edit; blank = skip)
+
+Mac-side walkthrough (for Claude on the Mac): [`mac/REMOTE-ACCESS.md`](mac/REMOTE-ACCESS.md).
 
 On the Mac: `tailscale-app` + `moonlight` (Caskfile), `wakeonlan` (Brewfile),
 `ssh desktop` / `ssh pc` (ssh/config), `wakepc` to power the PC on (same LAN only).
