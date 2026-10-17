@@ -7,12 +7,11 @@ cask "zen"
 cask "helium-browser"
 
 # ── Editors / IDEs ───────────────────────────────────────────
-cask "visual-studio-code"
+cask "vscodium"
 cask "ghostty"
 
 # ── Dev tools ────────────────────────────────────────────────
 cask "bruno"
-cask "postman"
 cask "android-studio"
 cask "android-commandlinetools"
 cask "android-platform-tools"
@@ -26,14 +25,11 @@ cask "claude"
 
 # ── Communication ────────────────────────────────────────────
 cask "discord"
-cask "slack"
 cask "telegram"
 cask "whatsapp"
 
 # ── Media / Entertainment ────────────────────────────────────
 cask "spotify"
-cask "audacity"
-cask "obs"
 cask "vlc"
 
 # ── Utilities ────────────────────────────────────────────────
@@ -46,6 +42,5 @@ cask "homebrew-app"
 
 # ── Fonts ────────────────────────────────────────────────────
 cask "font-iosevka"
-cask "font-iosevka-nerd-font"
 cask "font-instrument-sans"
 cask "font-instrument-serif"
