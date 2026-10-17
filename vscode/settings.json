@@ -1,6 +1,8 @@
 {
-    "editor.fontFamily": "Iosevka",
+    "editor.fontFamily": "Iosevka, 'Iosevka Nerd Font Mono', monospace",
+    "editor.fontLigatures": true,
     "editor.fontSize": 16,
+    "terminal.integrated.fontFamily": "Iosevka, 'Iosevka Nerd Font Mono', monospace",
     "workbench.iconTheme": "vscode-icons",
     "aws.cloudformation.telemetry.enabled": true,
     "workbench.colorTheme": "Night Owl",
@@ -14,5 +16,25 @@
     "editor.mouseWheelZoom": true,
     "terminal.integrated.mouseWheelScrollSensitivity": 3,
     "terminal.integrated.gpuAcceleration": "off",
-    "git.autofetch": true
+    "git.autofetch": true,
+    "todo-tree.ripgrep.ripgrep": "/usr/bin/rg",
+    "basedpyright.analysis.diagnosticSeverityOverrides": {
+        "reportAny": "none",
+        "reportCallInDefaultInitializer": "none",
+        "reportUnusedCallResult": "none",
+        "reportImplicitStringConcatenation": "none",
+        "reportExplicitAny": "none",
+        "reportUnknownMemberType": "none",
+        "reportUnknownArgumentType": "none",
+        "reportUnknownVariableType": "none",
+        "reportUnknownParameterType": "none",
+        "reportUnknownLambdaType": "none",
+        "reportUnusedParameter": "none",
+        "reportUntypedFunctionDecorator": "none",
+        "reportUnannotatedClassAttribute": "none",
+        "reportImplicitOverride": "none"
+    },
+    "workbench.editorAssociations": {
+        "*.md": "vscode.markdown.editor"
+    }
 }
