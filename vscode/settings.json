@@ -34,7 +34,9 @@
         "reportUnannotatedClassAttribute": "none",
         "reportImplicitOverride": "none"
     },
+    "terminal.integrated.defaultProfile.osx": "fish",
+    "redhat.telemetry.enabled": false,
     "workbench.editorAssociations": {
-        "*.md": "vscode.markdown.editor"
+        "*.md": "vscode.markdown.preview.editor"
     }
 }

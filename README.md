@@ -29,9 +29,10 @@ cli-setup/
 ├── ghostty/
 │   └── config       # Font + theme
 ├── vscode/
-│   ├── settings.json       # Symlinked into VS Code (mac) and VSCodium (arch)
-│   ├── extensions.txt      # Shared list (MS-only ones fail on VSCodium)
-│   └── extensions-oss.txt  # Open VSX replacements, VSCodium only
+│   ├── settings.json       # Symlinked into VSCodium (mac + arch)
+│   ├── keybindings.json    # Symlinked into VSCodium (mac + arch)
+│   ├── extensions.txt      # Shared list (MS-only ones fail on Open VSX)
+│   └── extensions-oss.txt  # Open VSX replacements for the MS-only ones
 ├── mac/
 │   ├── Brewfile         # CLI formulae
 │   ├── Caskfile         # GUI apps (casks) — skipped when CLI_ONLY=1
@@ -65,7 +66,7 @@ Steps (run all, or pick one from the menu):
 3. Install packages via `Brewfile` (CLI) + `Caskfile` (GUI apps, unless `CLI_ONLY=1`)
 4. Add Fish to `/etc/shells`
 5. Install Fisher + Tide prompt
-6. Symlink Fish/zsh/git/ssh/ghostty configs + VS Code settings & extensions
+6. Symlink Fish/zsh/git/ssh/ghostty configs + VSCodium settings & extensions
 7. Set Fish as default shell
 8. Install Claude Code CLI
 9. Install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)

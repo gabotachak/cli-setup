@@ -64,7 +64,7 @@ bash arch/setup-remote.sh # Arch remote access: sshd + Tailscale + Cloudflare DN
 - **Package lists are grouped by purpose** — keep new entries under the matching group rather than appending to the end.
   - `arch/pacman.txt` / `arch/aur.txt`: **CLI only** (Dev tools / Containers / AI-ML / Shell-CLI / build deps). A GUI app request goes to the `hyprland-config` repo, not here.
   - `mac/Brewfile`: `brew` formulae only, grouped like the arch lists.
-  - `vscode/extensions.txt`: shared by mac (VS Code, MS marketplace) and arch (VSCodium, Open VSX). On arch the Microsoft-only entries fail and get reported — expected. `vscode/extensions-oss.txt` holds their Open VSX replacements and is arch-only. `vscode/settings.json` is symlinked on both OSes, so keep it OS-agnostic (no absolute Homebrew paths).
+  - `vscode/extensions.txt`: shared by mac and arch, both on VSCodium (Open VSX). The Microsoft-only entries fail — expected (reported on arch, silent on mac). `vscode/extensions-oss.txt` holds their Open VSX replacements and is installed on both. `vscode/settings.json` and `vscode/keybindings.json` are symlinked on both OSes, so keep them OS-agnostic (no absolute Homebrew paths).
   - `mac/Caskfile`: GUI `cask` apps, grouped Browsers/Editors/Dev tools/Productivity/Communication/Media/Utilities/Fonts. macOS-only (no macOS machine-dump repo). `step_bundle` installs it after `Brewfile` unless `CLI_ONLY=1`.
 
 ## Conventions to follow when editing

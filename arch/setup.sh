@@ -195,7 +195,8 @@ step_vscodium() {
   fi
   info "Symlinking VSCodium settings..."
   mkdir -p "$HOME/.config/VSCodium/User"
-  ln -sf "$REPO_ROOT/vscode/settings.json" "$HOME/.config/VSCodium/User/settings.json"
+  ln -sf "$REPO_ROOT/vscode/settings.json"    "$HOME/.config/VSCodium/User/settings.json"
+  ln -sf "$REPO_ROOT/vscode/keybindings.json" "$HOME/.config/VSCodium/User/keybindings.json"
   # Open VSX lacks Microsoft-only extensions (pylance, cpptools, remote-*, liveshare,
   # anycode-*): those fail here and get reported. extensions-oss.txt holds their
   # open replacements.

@@ -118,14 +118,17 @@ step_symlink() {
   ln -sf "$REPO_ROOT/ghostty/config" "$HOME/.config/ghostty/config"
   success "Ghostty config symlinked"
 
-  if command -v code &>/dev/null; then
-    info "Symlinking VS Code settings..."
-    VSCODE_USER="$HOME/Library/Application Support/Code/User"
-    mkdir -p "$VSCODE_USER"
-    ln -sf "$REPO_ROOT/vscode/settings.json" "$VSCODE_USER/settings.json"
-    info "Installing VS Code extensions..."
-    while read -r ext; do code --install-extension "$ext" &>/dev/null; done < "$REPO_ROOT/vscode/extensions.txt"
-    success "VS Code configured"
+  if command -v codium &>/dev/null; then
+    info "Symlinking VSCodium settings..."
+    VSCODIUM_USER="$HOME/Library/Application Support/VSCodium/User"
+    mkdir -p "$VSCODIUM_USER"
+    ln -sf "$REPO_ROOT/vscode/settings.json"    "$VSCODIUM_USER/settings.json"
+    ln -sf "$REPO_ROOT/vscode/keybindings.json" "$VSCODIUM_USER/keybindings.json"
+    # Open VSX lacks Microsoft-only extensions: those fail silently here.
+    # extensions-oss.txt holds their open replacements.
+    info "Installing VSCodium extensions from Open VSX..."
+    cat "$REPO_ROOT/vscode/extensions.txt" "$REPO_ROOT/vscode/extensions-oss.txt" | sed 's/#.*//' | xargs -n1 codium --install-extension &>/dev/null || true
+    success "VSCodium configured"
   fi
 }
 
