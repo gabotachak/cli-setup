@@ -124,6 +124,9 @@ step_symlink() {
     mkdir -p "$VSCODIUM_USER"
     ln -sf "$REPO_ROOT/vscodium/settings.json"    "$VSCODIUM_USER/settings.json"
     ln -sf "$REPO_ROOT/vscodium/keybindings.json" "$VSCODIUM_USER/keybindings.json"
+    # todo-tree can't find VSCodium's bundled rg (ripgrep-universal layout), and its
+    # path setting is shared with arch, so both OSes expose rg at /usr/local/bin/rg.
+    sudo mkdir -p /usr/local/bin && sudo ln -sf "$(brew --prefix)/bin/rg" /usr/local/bin/rg
     info "Installing VSCodium extensions from Open VSX..."
     xargs -n1 codium --install-extension < "$REPO_ROOT/vscodium/extensions.txt" &>/dev/null || true
     success "VSCodium configured"

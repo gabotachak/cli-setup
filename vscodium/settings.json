@@ -17,6 +17,7 @@
     "terminal.integrated.mouseWheelScrollSensitivity": 3,
     "terminal.integrated.gpuAcceleration": "off",
     "git.autofetch": true,
+    "todo-tree.ripgrep.ripgrep": "/usr/local/bin/rg",
     "basedpyright.analysis.diagnosticSeverityOverrides": {
         "reportAny": "none",
         "reportCallInDefaultInitializer": "none",

@@ -197,6 +197,9 @@ step_vscodium() {
   mkdir -p "$HOME/.config/VSCodium/User"
   ln -sf "$REPO_ROOT/vscodium/settings.json"    "$HOME/.config/VSCodium/User/settings.json"
   ln -sf "$REPO_ROOT/vscodium/keybindings.json" "$HOME/.config/VSCodium/User/keybindings.json"
+  # todo-tree can't find VSCodium's bundled rg (ripgrep-universal layout), and its
+  # path setting is shared with mac, so both OSes expose rg at /usr/local/bin/rg.
+  sudo ln -sf /usr/bin/rg /usr/local/bin/rg
   info "Installing VSCodium extensions from Open VSX..."
   install_list "$REPO_ROOT/vscodium/extensions.txt" codium --install-extension
   success "VSCodium configured"

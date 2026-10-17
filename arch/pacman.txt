@@ -13,6 +13,7 @@ mise
 uv
 gnupg
 pinentry
+ripgrep
 
 # ── Containers ───────────────────────────────────────────────
 docker
