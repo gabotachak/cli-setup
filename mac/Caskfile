@@ -25,6 +25,7 @@ cask "claude"
 
 # ── Communication ────────────────────────────────────────────
 cask "discord"
+cask "slack"
 cask "telegram"
 cask "whatsapp"
 
