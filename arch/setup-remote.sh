@@ -49,6 +49,9 @@ KbdInteractiveAuthentication no
 PermitRootLogin no
 AllowUsers gabotachak
 EOF
+  # Host keys only get generated on sshd's first start (sshdgenkeys.service),
+  # which is after `sshd -t` on a fresh box. -A only creates missing ones.
+  sudo ssh-keygen -A
   sudo sshd -t
   sudo systemctl enable --now sshd.service
   sudo systemctl reload sshd.service
