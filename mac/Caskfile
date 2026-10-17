@@ -37,6 +37,7 @@ cask "betterdisplay"
 cask "linearmouse"
 cask "anydesk"
 cask "tailscale-app"
+cask "mullvad-vpn"
 cask "moonlight"
 cask "homebrew-app"
 

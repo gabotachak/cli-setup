@@ -2,6 +2,8 @@
 # Install: brew bundle --file=Brewfile
 # GUI apps live in ./Caskfile.
 
+tap "omlahore/tap"
+
 # ── Dev tools ────────────────────────────────────────────────
 brew "git"
 brew "git-lfs"
@@ -24,6 +26,10 @@ brew "neovim"
 brew "tmux"
 brew "powershell"
 brew "flyctl"
+brew "libpq"
+brew "pre-commit"
+brew "swiftlint"
+brew "baguette"
 
 # ── Containers ───────────────────────────────────────────────
 brew "colima"
@@ -52,6 +58,8 @@ brew "wakeonlan"
 brew "pandoc"
 brew "typst"
 brew "spotify_player"
+brew "speedtest-go"
+brew "omlahore/tap/removemacai"
 
 # ── Build deps (native modules, mise-built pythons, etc.) ─────
 brew "tcl-tk"
