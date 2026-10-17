@@ -60,14 +60,17 @@ EOF
 
 step_ssh_inhibit() {
   # The desktop's idle timer (Caelestia) only sees local input, so it suspends
-  # the box under an active SSH session. sshd runs ~/.ssh/rc at every login:
-  # hold a logind sleep block until that session's sshd process ($PPID) exits.
+  # the box under an active SSH session. sshd runs ~/.ssh/rc at every login
+  # (as `$SHELL -c "/bin/sh ~/.ssh/rc"`): hold a logind sleep block until the
+  # grandparent, that session's sshd-session process, exits.
   info "Blocking sleep while SSH sessions are open → ~/.ssh/rc"
   cat > "$HOME/.ssh/rc" <<'EOF'
 # Managed by cli-setup/arch/setup-remote.sh
+# Resolve before backgrounding: the parent shell exits right after this script.
+session=$(ps -o ppid= -p "$PPID" | tr -d ' ')
 systemd-inhibit --no-ask-password --what=sleep:idle --mode=block --who=ssh \
   --why="SSH session from ${SSH_CLIENT%% *}" \
-  tail --pid="$PPID" -f /dev/null </dev/null >/dev/null 2>&1 &
+  tail --pid="$session" -f /dev/null </dev/null >/dev/null 2>&1 &
 EOF
   # polkit only lets the active local session take block inhibitors; allow this
   # user's SSH sessions too.
