@@ -195,14 +195,10 @@ step_vscodium() {
   fi
   info "Symlinking VSCodium settings..."
   mkdir -p "$HOME/.config/VSCodium/User"
-  ln -sf "$REPO_ROOT/vscode/settings.json"    "$HOME/.config/VSCodium/User/settings.json"
-  ln -sf "$REPO_ROOT/vscode/keybindings.json" "$HOME/.config/VSCodium/User/keybindings.json"
-  # Open VSX lacks Microsoft-only extensions (pylance, cpptools, remote-*, liveshare,
-  # anycode-*): those fail here and get reported. extensions-oss.txt holds their
-  # open replacements.
+  ln -sf "$REPO_ROOT/vscodium/settings.json"    "$HOME/.config/VSCodium/User/settings.json"
+  ln -sf "$REPO_ROOT/vscodium/keybindings.json" "$HOME/.config/VSCodium/User/keybindings.json"
   info "Installing VSCodium extensions from Open VSX..."
-  install_list "$REPO_ROOT/vscode/extensions.txt" codium --install-extension
-  install_list "$REPO_ROOT/vscode/extensions-oss.txt" codium --install-extension
+  install_list "$REPO_ROOT/vscodium/extensions.txt" codium --install-extension
   success "VSCodium configured"
 }
 

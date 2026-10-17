@@ -28,11 +28,10 @@ cli-setup/
 │   └── config       # Host aliases (no keys — generate those separately)
 ├── ghostty/
 │   └── config       # Font + theme
-├── vscode/
+├── vscodium/
 │   ├── settings.json       # Symlinked into VSCodium (mac + arch)
 │   ├── keybindings.json    # Symlinked into VSCodium (mac + arch)
-│   ├── extensions.txt      # Shared list (MS-only ones fail on Open VSX)
-│   └── extensions-oss.txt  # Open VSX replacements for the MS-only ones
+│   └── extensions.txt      # Open VSX extensions (mac + arch)
 ├── mac/
 │   ├── Brewfile         # CLI formulae
 │   ├── Caskfile         # GUI apps (casks) — skipped when CLI_ONLY=1
@@ -129,7 +128,7 @@ The script will:
 
 ## Remote Access (Mac → Arch PC)
 
-Use the PC's power from the Mac: SSH/VS Code Remote for terminal work, Sunshine +
+Use the PC's power from the Mac: SSH/VSCodium Remote-SSH for terminal work, Sunshine +
 Moonlight for the full desktop. Everything goes over Tailscale (no ports opened
 on the router); `pc.gabotachak.dev` is an A record (Cloudflare, DNS only) pointing
 at the PC's Tailscale IP, so it only resolves to something reachable inside the tailnet.
@@ -201,6 +200,7 @@ Other: `claude-work` runs Claude Code with `CLAUDE_CONFIG_DIR=$HOME/.claude-work
 ![Colima](https://img.shields.io/badge/Colima-container_runtime-blue)
 ![gh](https://img.shields.io/badge/GitHub_CLI-181717?logo=github&logoColor=white)
 ![GPG](https://img.shields.io/badge/GPG-0093DD?logo=gnuprivacyguard&logoColor=white)
+![pre-commit](https://img.shields.io/badge/pre--commit-FAB040?logo=precommit&logoColor=black)
 
 ### AI / ML
 
@@ -218,6 +218,7 @@ Other: `claude-work` runs Claude Code with `CLAUDE_CONFIG_DIR=$HOME/.claude-work
 ![typst](https://img.shields.io/badge/Typst-markup_language-blue)
 ![opencode](https://img.shields.io/badge/opencode-terminal_agent-black)
 ![spotify-player](https://img.shields.io/badge/spotify--player-TUI-1DB954)
+![speedtest-go](https://img.shields.io/badge/speedtest--go-network_speed-4e4e4e)
 
 > Arch's GUI apps/desktop config (Hyprland, browsers, gaming, …) are **not** in
 > this repo — they live in the machine dump in [`hyprland-config`](https://github.com/gabotachak/hyprland-config).

@@ -122,12 +122,10 @@ step_symlink() {
     info "Symlinking VSCodium settings..."
     VSCODIUM_USER="$HOME/Library/Application Support/VSCodium/User"
     mkdir -p "$VSCODIUM_USER"
-    ln -sf "$REPO_ROOT/vscode/settings.json"    "$VSCODIUM_USER/settings.json"
-    ln -sf "$REPO_ROOT/vscode/keybindings.json" "$VSCODIUM_USER/keybindings.json"
-    # Open VSX lacks Microsoft-only extensions: those fail silently here.
-    # extensions-oss.txt holds their open replacements.
+    ln -sf "$REPO_ROOT/vscodium/settings.json"    "$VSCODIUM_USER/settings.json"
+    ln -sf "$REPO_ROOT/vscodium/keybindings.json" "$VSCODIUM_USER/keybindings.json"
     info "Installing VSCodium extensions from Open VSX..."
-    cat "$REPO_ROOT/vscode/extensions.txt" "$REPO_ROOT/vscode/extensions-oss.txt" | sed 's/#.*//' | xargs -n1 codium --install-extension &>/dev/null || true
+    xargs -n1 codium --install-extension < "$REPO_ROOT/vscodium/extensions.txt" &>/dev/null || true
     success "VSCodium configured"
   fi
 }

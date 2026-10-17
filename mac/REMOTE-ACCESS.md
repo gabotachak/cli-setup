@@ -58,8 +58,8 @@ PC-side scripts: `arch/setup-remote.sh` (this repo) and
    (`wakeonlan 9c:6b:00:18:59:f4`). It only works on the same LAN as the PC, and only
    if WoL is enabled in the PC's BIOS. Open a new terminal to pick up the alias.
 
-5. **VS Code Remote-SSH.** Install `ms-vscode-remote.remote-ssh` if it's missing
-   (it's in `vscode/extensions.txt`). Then use Command Palette → "Remote-SSH:
+5. **VSCodium Remote-SSH.** Install `jeanp413.open-remote-ssh` if it's missing
+   (it's in `vscodium/extensions.txt`). Then use Command Palette → "Remote-SSH:
    Connect to Host" → `desktop`.
 
 6. **Moonlight (full desktop)**: this needs the user, because a PIN is involved.
