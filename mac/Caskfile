@@ -40,6 +40,8 @@ cask "vlc"
 cask "betterdisplay"
 cask "linearmouse"
 cask "anydesk"
+cask "tailscale-app"
+cask "moonlight"
 cask "homebrew-app"
 
 # ── Fonts ────────────────────────────────────────────────────

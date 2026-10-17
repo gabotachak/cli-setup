@@ -9,8 +9,9 @@ Host gitlab.com
   User git
   IdentityFile ~/.ssh/id_ed25519_gitlab
 
-Host desktop
-  HostName 192.168.1.19
+# PC-Gabo (CachyOS) over Tailscale — arch/setup-remote.sh
+Host desktop pc
+  HostName pc.gabotachak.dev
   User gabotachak
   IdentityFile ~/.ssh/id_ed25519
   AddKeysToAgent yes

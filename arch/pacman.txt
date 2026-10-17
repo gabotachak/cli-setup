@@ -19,6 +19,12 @@ docker
 docker-buildx
 docker-compose
 
+# ── Remote access (arch/setup-remote.sh) ───────────────────
+openssh
+tailscale
+ethtool
+jq
+
 # ── AI / ML ──────────────────────────────────────────────────
 ollama
 

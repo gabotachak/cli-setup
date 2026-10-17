@@ -43,7 +43,8 @@ cli-setup/
     ├── aur.txt           # AUR CLI packages (via shelly)
     ├── fish/config.fish  # Fish config (Arch, CachyOS theming)
     ├── setup.sh          # One-step bootstrap script
-    └── setup-keys.sh     # SSH key + commit signing (SSH)
+    ├── setup-keys.sh     # SSH key + commit signing (SSH)
+    └── setup-remote.sh   # SSH + Tailscale + pc.gabotachak.dev + Wake-on-LAN
 ```
 
 ---
@@ -124,6 +125,32 @@ The script will:
 
 ---
 
+## Remote Access (Mac → Arch PC)
+
+Use the PC's power from the Mac: SSH/VS Code Remote for terminal work, Sunshine +
+Moonlight for the full desktop. Everything goes over Tailscale (no ports opened
+on the router); `pc.gabotachak.dev` is an A record (Cloudflare, DNS only) pointing
+at the PC's Tailscale IP, so it only resolves to something reachable inside the tailnet.
+
+```bash
+bash ~/Repos/cli-setup/arch/setup-remote.sh                 # on the PC
+bash ~/Repos/hyprland-config/system/setup-sunshine.sh       # on the PC (desktop streaming)
+```
+
+`setup-remote.sh`:
+1. Installs `openssh`, `tailscale`, `ethtool`, `jq`
+2. Authorizes every key on `github.com/gabotachak.keys` (merged into `~/.ssh/authorized_keys`)
+3. Hardens sshd (keys only, no root) and enables it
+4. Enables `tailscaled` and logs in (`--operator=$USER`)
+5. `ufw allow in on tailscale0` (SSH + Sunshine reachable only from the tailnet)
+6. Turns on Wake-on-LAN (magic packet) for the wired connection — also enable it in the BIOS
+7. Upserts `pc.gabotachak.dev` → Tailscale IP via the Cloudflare API (`CLOUDFLARE_API_TOKEN`, Zone:DNS:Edit; blank = skip)
+
+On the Mac: `tailscale-app` + `moonlight` (Caskfile), `wakeonlan` (Brewfile),
+`ssh desktop` / `ssh pc` (ssh/config), `wakepc` to power the PC on (same LAN only).
+
+---
+
 ## Shell Features
 
 ### Fish (primary)
@@ -155,7 +182,7 @@ The script will:
 | `gnew` | `git checkout -b` |
 | `gac 'msg'` | `git add . && git commit -m 'msg'` |
 
-Other: `claude-work` runs Claude Code with `CLAUDE_CONFIG_DIR=$HOME/.claude-work` (second account, e.g. freelance work).
+Other: `claude-work` runs Claude Code with `CLAUDE_CONFIG_DIR=$HOME/.claude-work` (second account, e.g. freelance work). `wakepc` (macOS) sends a Wake-on-LAN magic packet to the Arch PC.
 
 ---
 

@@ -28,7 +28,8 @@ cli-setup/
     ├── aur.txt       # AUR packages (installed via `shelly install aur`)
     ├── fish/config.fish  # Fish config — Arch equivalent of ../fish/config.fish
     ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-9)
-    └── setup-keys.sh # SSH commit-signing setup (Arch, assumes `gh auth login` already ran)
+    ├── setup-keys.sh # SSH commit-signing setup (Arch, assumes `gh auth login` already ran)
+    └── setup-remote.sh # SSH (keys only) + Tailscale + pc.gabotachak.dev DNS + Wake-on-LAN
 ```
 
 `fish/functions/` is OS-agnostic and shared — both `mac/setup.sh` and `arch/setup.sh` symlink the same directory. Only `config.fish` differs per OS (Homebrew paths on mac vs. CachyOS theming/pacman paths on Arch), which is why Arch gets its own `arch/fish/config.fish` instead of reusing `fish/config.fish`.
@@ -47,6 +48,7 @@ bash arch/setup.sh        # Arch interactive menu
 bash arch/setup.sh all    # run all arch bootstrap steps
 bash arch/setup.sh <1-9>  # run a single arch step (see show_menu in arch/setup.sh)
 bash arch/setup-keys.sh   # Arch SSH commit signing (run `gh auth login` first), signs commits/tags globally
+bash arch/setup-remote.sh # Arch remote access: sshd + Tailscale + Cloudflare DNS + WoL (idempotent)
 ```
 
 `mac/*.sh` use `set -euo pipefail` — a broken step aborts the whole run. `arch/setup.sh` intentionally drops `-e`; `pacman.txt` installs as one batch (`pacman -Syu`), but `aur.txt` goes through `install_list` one package at a time (`shelly install aur`) so one wrong/renamed AUR package doesn't abort the rest — failures are reported at the end. Both need an interactive terminal (`sudo` / AUR build prompts), so they're meant to be run directly by a user, not piped or run non-interactively.
@@ -57,6 +59,7 @@ bash arch/setup-keys.sh   # Arch SSH commit signing (run `gh auth login` first),
 - **Fish functions are one-per-file** under `fish/functions/`, named after the function. Files prefixed with `_` (e.g. `_gc.fish`, `_bl.fish`) are internal helpers composed by other functions — e.g. `_bl` (branch + push new) and `_br` (checkout + merge existing) both call `_gc` and `_get_primary_branch`. `_get_primary_branch` resolves the default branch (main/master) via `git symbolic-ref` on each call — no cache, since it's a local file read and a cache not keyed per repo returns the wrong branch after `cd`.
 - **`setup.sh` step order matters**: Xcode CLT → Homebrew → Brewfile bundle → add Fish to `/etc/shells` → Fisher + Tide install → symlink Fish config → set Fish as default shell → install Claude Code CLI → install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills). `step_symlink` symlinks (not copies) `fish/config.fish` and every file in `fish/functions/` into `~/.config/fish/`, so edits to files in this repo take effect immediately on a machine that already ran setup.
 - **`setup-keys.sh`** is separate from `setup.sh` (not run by `all`) and assumes `gh auth login` (git protocol: ssh) already ran — that generates `~/.ssh/id_ed25519` and registers it with GitHub as an Authentication key. `setup-keys.sh` only wires that same key up for commit signing (no GPG): `git config --global gpg.format ssh` + `user.signingkey <key>.pub` + `commit.gpgsign true` / `tag.gpgsign true` + `~/.config/git/allowed_signers`, then registers the key with GitHub as a Signing key via `gh ssh-key add --type signing` (refreshing the `admin:ssh_signing_key` scope first if needed) — no manual paste. This matches the SSH-signing setup in the `hyprland-config` repo; keep them consistent.
+- **`setup-remote.sh`** is also standalone (not in `all`). Remote access runs only over Tailscale: ufw trusts `tailscale0`, nothing is opened on the LAN/WAN. `pc.gabotachak.dev` is a Cloudflare A record (proxied=false) to the PC's 100.x Tailscale IP. Sunshine (desktop streaming) is GUI, so it lives in `hyprland-config/system/setup-sunshine.sh`, not here. The Mac side is `ssh/config` (`Host desktop pc`), `tailscale-app`/`moonlight` casks, `wakeonlan` formula and the `wakepc` alias (fish + zsh).
 - **Package lists are grouped by purpose** — keep new entries under the matching group rather than appending to the end.
   - `arch/pacman.txt` / `arch/aur.txt`: **CLI only** (Dev tools / Containers / AI-ML / Shell-CLI / build deps). A GUI app request goes to the `hyprland-config` repo, not here.
   - `mac/Brewfile`: `brew` formulae only, grouped like the arch lists.
