@@ -65,7 +65,7 @@ step_ssh_inhibit() {
   info "Blocking sleep while SSH sessions are open → ~/.ssh/rc"
   cat > "$HOME/.ssh/rc" <<'EOF'
 # Managed by cli-setup/arch/setup-remote.sh
-systemd-inhibit --what=sleep:idle --mode=block --who=ssh \
+systemd-inhibit --no-ask-password --what=sleep:idle --mode=block --who=ssh \
   --why="SSH session from ${SSH_CLIENT%% *}" \
   tail --pid="$PPID" -f /dev/null </dev/null >/dev/null 2>&1 &
 EOF
