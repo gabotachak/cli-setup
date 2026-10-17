@@ -32,5 +32,5 @@ if status is-interactive
     alias wakepc 'wakeonlan 9c:6b:00:18:59:f4'
 end
 
-set -gx JAVA_HOME "/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+set -gx JAVA_HOME "/opt/homebrew/opt/openjdk@25/libexec/openjdk.jdk/Contents/Home"
 set -gx PATH $JAVA_HOME/bin $PATH
