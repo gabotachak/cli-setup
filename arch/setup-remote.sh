@@ -58,6 +58,30 @@ EOF
   success "sshd running"
 }
 
+step_ssh_inhibit() {
+  # The desktop's idle timer (Caelestia) only sees local input, so it suspends
+  # the box under an active SSH session. sshd runs ~/.ssh/rc at every login:
+  # hold a logind sleep block until that session's sshd process ($PPID) exits.
+  info "Blocking sleep while SSH sessions are open → ~/.ssh/rc"
+  cat > "$HOME/.ssh/rc" <<'EOF'
+# Managed by cli-setup/arch/setup-remote.sh
+systemd-inhibit --what=sleep:idle --mode=block --who=ssh \
+  --why="SSH session from ${SSH_CLIENT%% *}" \
+  tail --pid="$PPID" -f /dev/null </dev/null >/dev/null 2>&1 &
+EOF
+  # polkit only lets the active local session take block inhibitors; allow this
+  # user's SSH sessions too.
+  sudo tee /etc/polkit-1/rules.d/50-ssh-inhibit.rules >/dev/null <<EOF
+// Managed by cli-setup/arch/setup-remote.sh
+polkit.addRule(function(action, subject) {
+  if ((action.id == "org.freedesktop.login1.inhibit-block-sleep" ||
+       action.id == "org.freedesktop.login1.inhibit-block-idle") &&
+      subject.user == "$USER") return polkit.Result.YES;
+});
+EOF
+  success "SSH sessions now block suspend/hibernate"
+}
+
 step_tailscale() {
   sudo systemctl enable --now tailscaled.service
   if tailscale status &>/dev/null; then
@@ -132,6 +156,7 @@ sudo -v
 step_packages
 step_authorized_keys
 step_sshd
+step_ssh_inhibit
 step_tailscale
 step_firewall
 step_wol
