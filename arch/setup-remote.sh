@@ -85,6 +85,26 @@ EOF
   success "SSH sessions now block suspend/hibernate"
 }
 
+step_tmux_inhibit() {
+  # The SSH block dies with the connection, so work left running in tmux after
+  # a drop would be suspended. Hold another block for the tmux server's whole
+  # life (it exits with its last session). @sleep_inhibit keeps a config reload
+  # from stacking a second one. Own file so a real tmux.conf can live alongside.
+  local conf="$HOME/.config/tmux/tmux.conf" line="source-file ~/.config/tmux/inhibit-sleep.conf"
+  info "Blocking sleep while a tmux server is running → ~/.config/tmux/inhibit-sleep.conf"
+  mkdir -p "$HOME/.config/tmux"
+  cat > "$HOME/.config/tmux/inhibit-sleep.conf" <<'EOF'
+# Managed by cli-setup/arch/setup-remote.sh
+if -F '#{!=:#{@sleep_inhibit},1}' {
+  set -g @sleep_inhibit 1
+  run-shell -b 'systemd-inhibit --no-ask-password --what=sleep:idle --mode=block --who=tmux --why="tmux server running" tail --pid=#{pid} -f /dev/null >/dev/null 2>&1'
+}
+EOF
+  touch "$conf"
+  grep -qxF "$line" "$conf" || echo "$line" >> "$conf"
+  success "tmux sessions now block suspend/hibernate"
+}
+
 step_tailscale() {
   sudo systemctl enable --now tailscaled.service
   if tailscale status &>/dev/null; then
@@ -160,6 +180,7 @@ step_packages
 step_authorized_keys
 step_sshd
 step_ssh_inhibit
+step_tmux_inhibit
 step_tailscale
 step_firewall
 step_wol
