@@ -44,5 +44,7 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit"
         }
-    }
+    },
+    "terminal.integrated.mouseWheelZoom": true,
+    "terminal.integrated.fontSize": 17
 }
