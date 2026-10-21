@@ -3,5 +3,8 @@ font-size = 14
 
 theme = dark:Night Owl,light:Night Owlish Light
 
+# Default ctrl+enter toggles fullscreen; free it so Claude Code can use it to submit
+keybind = ctrl+enter=unbind
+
 # Per-machine overrides (optional; on Arch it comes from hyprland-config)
 config-file = ?local.conf
