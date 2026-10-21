@@ -32,6 +32,12 @@ cli-setup/
 │   ├── settings.json       # Symlinked into VSCodium (mac + arch)
 │   ├── keybindings.json    # Symlinked into VSCodium (mac + arch)
 │   └── extensions.txt      # Open VSX extensions (mac + arch)
+├── claude/
+│   ├── CLAUDE.md        # Global Claude Code instructions (symlinked to ~/.claude/CLAUDE.md)
+│   ├── settings.json    # Global Claude Code settings (symlinked to ~/.claude/settings.json)
+│   ├── profiles.txt     # Extra profiles sharing ~/.claude (work, korvy)
+│   ├── skills.txt       # Third-party skills: `<github repo> <skill>`
+│   └── SETUP.md         # Instructions for Claude to set this up on a machine
 ├── mac/
 │   ├── Brewfile         # CLI formulae
 │   ├── Caskfile         # GUI apps (casks) — skipped when CLI_ONLY=1
@@ -68,7 +74,8 @@ Steps (run all, or pick one from the menu):
 6. Symlink Fish/zsh/git/ssh/ghostty configs + VSCodium settings & extensions
 7. Set Fish as default shell
 8. Install Claude Code CLI
-9. Install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)
+9. Install Claude Code plugins (ponytail, omniroute, graphify, agent-skills, find-skills)
+10. Claude Code config: symlink `claude/CLAUDE.md` + `settings.json`, install `claude/skills.txt`, link the `claude/profiles.txt` profiles to `~/.claude`, add the `plane` MCP
 
 Then open a new terminal and configure the prompt:
 ```bash
@@ -92,10 +99,26 @@ The script will:
 5. Set Fish as default shell
 6. Add your user to the `docker` group
 7. Install Claude Code CLI
-8. Install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)
-9. Symlink VSCodium settings + install extensions from Open VSX (`vscodium` itself comes from `hyprland-config`)
+8. Install Claude Code plugins (ponytail, omniroute, graphify, agent-skills, find-skills)
+9. Claude Code config: symlink `claude/CLAUDE.md` + `settings.json`, install `claude/skills.txt`, link the `claude/profiles.txt` profiles to `~/.claude`, add the `plane` MCP
+10. Symlink VSCodium settings + install extensions from Open VSX (`vscodium` itself comes from `hyprland-config`)
 
 > Needs an interactive terminal — `sudo`/AUR builds prompt for a password and confirmations, so run it directly rather than through a non-interactive shell.
+
+---
+
+## Claude Code profiles
+
+`~/.claude` is the default profile; `~/.claude-work` and `~/.claude-korvy` (`claude/profiles.txt`) are
+symlink views of it, so they differ only by account/billing. The config step shares CLAUDE.md,
+settings.json, plugins, skills (except `synced`), history, projects, file-history, paste-cache and
+the ponytail files; it never touches `.credentials.json`, `.claude.json`, `skills/synced`, sessions or caches.
+Aliases: `claude`, `claude-work`, `claude-korvy`.
+
+- After the step, run `/login` in each profile, then `/mcp` to authenticate `plane`.
+- macOS: check that each `CLAUDE_CONFIG_DIR` uses its own Keychain entry (otherwise logins overwrite each other).
+- Memories and `projects/` are NOT versioned (tied to absolute paths, private data).
+- To have Claude do all this for you, point it at [`claude/SETUP.md`](claude/SETUP.md).
 
 ---
 
@@ -185,7 +208,7 @@ On the Mac: `tailscale-app` + `moonlight` (Caskfile), `wakeonlan` (Brewfile),
 | `gnew` | `git checkout -b` |
 | `gac 'msg'` | `git add . && git commit -m 'msg'` |
 
-Other: `claude-work` runs Claude Code with `CLAUDE_CONFIG_DIR=$HOME/.claude-work` (second account, e.g. freelance work). `wakepc` (macOS) sends a Wake-on-LAN magic packet to the Arch PC.
+Other: `claude-work` / `claude-korvy` run Claude Code with `CLAUDE_CONFIG_DIR=$HOME/.claude-work` / `.claude-korvy` (other accounts). `wakepc` (macOS) sends a Wake-on-LAN magic packet to the Arch PC.
 
 ---
 

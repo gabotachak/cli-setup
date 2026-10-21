@@ -18,17 +18,21 @@ cli-setup/
 ├── fish/
 │   ├── config.fish           # Fish config (Tide prompt) — macOS primary shell
 │   └── functions/             # One function per file (fish convention) — shared by mac AND arch
+├── claude/
+│   ├── CLAUDE.md, settings.json  # Global Claude Code config (symlinked into ~/.claude)
+│   ├── profiles.txt, skills.txt  # Extra profiles (work, korvy) / third-party skills (`repo skill`)
+│   └── SETUP.md                  # Instructions for Claude to set this up on a machine
 ├── mac/
 │   ├── Brewfile     # CLI brew formulae
 │   ├── Caskfile     # GUI casks (skipped when CLI_ONLY=1)
-│   ├── setup.sh     # One-step bootstrap (menu-driven, steps 1-9)
+│   ├── setup.sh     # One-step bootstrap (menu-driven, steps 1-10)
 │   ├── setup-keys.sh # SSH commit-signing setup (assumes `gh auth login` already ran)
 │   └── REMOTE-ACCESS.md # Mac-side steps to reach the Arch PC (SSH/Moonlight) — read when asked about remote access
 └── arch/
     ├── pacman.txt    # Official Arch/CachyOS repo packages
     ├── aur.txt       # AUR packages (installed via `shelly install aur`)
     ├── fish/config.fish  # Fish config — Arch equivalent of ../fish/config.fish
-    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-9)
+    ├── setup.sh      # One-step bootstrap (menu-driven, steps 1-10)
     ├── setup-keys.sh # SSH commit-signing setup (Arch, assumes `gh auth login` already ran)
     └── setup-remote.sh # SSH (keys only) + Tailscale + pc.gabotachak.dev DNS + Wake-on-LAN
 ```
@@ -42,12 +46,12 @@ There's no test suite. "Testing" a change means running the relevant script or s
 ```bash
 bash mac/setup.sh          # macOS interactive menu
 bash mac/setup.sh all      # run all mac bootstrap steps
-bash mac/setup.sh <1-9>    # run a single mac step (see show_menu in mac/setup.sh)
+bash mac/setup.sh <1-10>    # run a single mac step (see show_menu in mac/setup.sh)
 bash mac/setup-keys.sh     # macOS SSH commit signing (run `gh auth login` first), signs commits/tags globally
 
 bash arch/setup.sh        # Arch interactive menu
 bash arch/setup.sh all    # run all arch bootstrap steps
-bash arch/setup.sh <1-9>  # run a single arch step (see show_menu in arch/setup.sh)
+bash arch/setup.sh <1-10>  # run a single arch step (see show_menu in arch/setup.sh)
 bash arch/setup-keys.sh   # Arch SSH commit signing (run `gh auth login` first), signs commits/tags globally
 bash arch/setup-remote.sh # Arch remote access: sshd + Tailscale + Cloudflare DNS + WoL (idempotent)
 ```
@@ -58,7 +62,7 @@ bash arch/setup-remote.sh # Arch remote access: sshd + Tailscale + Cloudflare DN
 
 - **Fish is primary, zsh is fallback.** Aliases/functions are duplicated across both (e.g. `gp`, `gpl`, `gc`, `gnew`, `gac`) — when adding a git shortcut, add it to both `fish/config.fish`/`fish/functions/` and `zsh/.zshrc` unless it's fish-only.
 - **Fish functions are one-per-file** under `fish/functions/`, named after the function. Files prefixed with `_` (e.g. `_gc.fish`, `_bl.fish`) are internal helpers composed by other functions — e.g. `_bl` (branch + push new) and `_br` (checkout + merge existing) both call `_gc` and `_get_primary_branch`. `_get_primary_branch` resolves the default branch (main/master) via `git symbolic-ref` on each call — no cache, since it's a local file read and a cache not keyed per repo returns the wrong branch after `cd`.
-- **`setup.sh` step order matters**: Xcode CLT → Homebrew → Brewfile bundle → add Fish to `/etc/shells` → Fisher + Tide install → symlink Fish config → set Fish as default shell → install Claude Code CLI → install Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills). `step_symlink` symlinks (not copies) `fish/config.fish` and every file in `fish/functions/` into `~/.config/fish/`, so edits to files in this repo take effect immediately on a machine that already ran setup.
+- **`setup.sh` step order matters**: Xcode CLT → Homebrew → Brewfile bundle → add Fish to `/etc/shells` → Fisher + Tide install → symlink Fish config → set Fish as default shell → install Claude Code CLI → install Claude Code plugins (ponytail, omniroute, graphify, agent-skills, find-skills) → Claude Code config (`step_claude_config`: links `claude/` into `~/.claude`, installs `claude/skills.txt`, shares `~/.claude` with the `claude/profiles.txt` profiles, adds the plane MCP; step 10 on mac, 9 on arch before VSCodium). To set up or repair the Claude Code config (profiles, skills, plugins) follow `claude/SETUP.md`. `step_symlink` symlinks (not copies) `fish/config.fish` and every file in `fish/functions/` into `~/.config/fish/`, so edits to files in this repo take effect immediately on a machine that already ran setup.
 - **`setup-keys.sh`** is separate from `setup.sh` (not run by `all`) and assumes `gh auth login` (git protocol: ssh) already ran — that generates `~/.ssh/id_ed25519` and registers it with GitHub as an Authentication key. `setup-keys.sh` only wires that same key up for commit signing (no GPG): `git config --global gpg.format ssh` + `user.signingkey <key>.pub` + `commit.gpgsign true` / `tag.gpgsign true` + `~/.config/git/allowed_signers`, then registers the key with GitHub as a Signing key via `gh ssh-key add --type signing` (refreshing the `admin:ssh_signing_key` scope first if needed) — no manual paste. This matches the SSH-signing setup in the `hyprland-config` repo; keep them consistent.
 - **`setup-remote.sh`** is also standalone (not in `all`). Remote access runs only over Tailscale: ufw trusts `tailscale0`, nothing is opened on the LAN/WAN. `pc.gabotachak.dev` is a Cloudflare A record (proxied=false) to the PC's 100.x Tailscale IP. Sunshine (desktop streaming) is GUI, so it lives in `hyprland-config/system/setup-sunshine.sh`, not here. Each SSH session holds a logind sleep block (`~/.ssh/rc` + a polkit rule letting this user take block inhibitors from a non-local session), because the desktop idle timer (Caelestia) only sees local input and would suspend the box mid-session. A running tmux server holds one too (`~/.config/tmux/inhibit-sleep.conf`, sourced from `tmux.conf`), so work left in tmux survives a dropped connection. The Mac side is `ssh/config` (`Host desktop pc`), `tailscale-app`/`moonlight` casks, `wakeonlan` formula and the `wakepc` alias (fish + zsh).
 - **Package lists are grouped by purpose** — keep new entries under the matching group rather than appending to the end.
