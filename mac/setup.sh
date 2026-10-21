@@ -212,16 +212,24 @@ step_claude_config() {
   local cfg="$REPO_ROOT/claude" c="$HOME/.claude" f bak repo skill p pd e s t
   mkdir -p "$c/skills"
 
-  info "Linking ~/.claude/CLAUDE.md + settings.json to the repo..."
-  for f in CLAUDE.md settings.json; do
-    if [[ -e "$c/$f" && ! -L "$c/$f" ]] && ! cmp -s "$c/$f" "$cfg/$f"; then
-      bak="$c/$f.bak"; [[ -e "$bak" ]] && bak="$bak.$(date +%s)"
-      mv "$c/$f" "$bak"
-      warn "$c/$f differed from the repo copy — saved as $bak"
-    fi
-    ln -sfn "$cfg/$f" "$c/$f"
-  done
-  success "CLAUDE.md + settings.json linked"
+  info "Linking ~/.claude/CLAUDE.md to the repo..."
+  f=CLAUDE.md
+  if [[ -e "$c/$f" && ! -L "$c/$f" ]] && ! cmp -s "$c/$f" "$cfg/$f"; then
+    bak="$c/$f.bak"; [[ -e "$bak" ]] && bak="$bak.$(date +%s)"
+    mv "$c/$f" "$bak"
+    warn "$c/$f differed from the repo copy — saved as $bak"
+  fi
+  ln -sfn "$cfg/$f" "$c/$f"
+  success "CLAUDE.md linked"
+
+  # Not a symlink: an interactive session (/model) replaces a symlinked settings.json with a real file.
+  # Repo keys win; keys Claude Code adds locally are kept.
+  info "Merging repo settings.json into ~/.claude/settings.json..."
+  [[ -L "$c/settings.json" ]] && rm "$c/settings.json"
+  [[ -f "$c/settings.json" ]] || echo '{}' > "$c/settings.json"
+  jq -s '.[0] * .[1]' "$c/settings.json" "$cfg/settings.json" > "$c/settings.json.tmp" \
+    && mv "$c/settings.json.tmp" "$c/settings.json" && success "settings.json merged" \
+    || warn "settings.json merge failed (invalid JSON?)"
 
   info "Installing third-party skills..."
   while read -r repo skill; do

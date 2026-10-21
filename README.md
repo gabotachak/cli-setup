@@ -34,7 +34,7 @@ cli-setup/
 │   └── extensions.txt      # Open VSX extensions (mac + arch)
 ├── claude/
 │   ├── CLAUDE.md        # Global Claude Code instructions (symlinked to ~/.claude/CLAUDE.md)
-│   ├── settings.json    # Global Claude Code settings (symlinked to ~/.claude/settings.json)
+│   ├── settings.json    # Global Claude Code settings (jq-merged into ~/.claude/settings.json)
 │   ├── profiles.txt     # Extra profiles sharing ~/.claude (work, korvy)
 │   ├── skills.txt       # Third-party skills: `<github repo> <skill>`
 │   └── SETUP.md         # Instructions for Claude to set this up on a machine
@@ -75,7 +75,7 @@ Steps (run all, or pick one from the menu):
 7. Set Fish as default shell
 8. Install Claude Code CLI
 9. Install Claude Code plugins (ponytail, omniroute, graphify, agent-skills, find-skills)
-10. Claude Code config: symlink `claude/CLAUDE.md` + `settings.json`, install `claude/skills.txt`, link the `claude/profiles.txt` profiles to `~/.claude`, add the `plane` MCP
+10. Claude Code config: symlink `claude/CLAUDE.md`, merge `settings.json`, install `claude/skills.txt`, link the `claude/profiles.txt` profiles to `~/.claude`, add the `plane` MCP
 
 Then open a new terminal and configure the prompt:
 ```bash
@@ -100,7 +100,7 @@ The script will:
 6. Add your user to the `docker` group
 7. Install Claude Code CLI
 8. Install Claude Code plugins (ponytail, omniroute, graphify, agent-skills, find-skills)
-9. Claude Code config: symlink `claude/CLAUDE.md` + `settings.json`, install `claude/skills.txt`, link the `claude/profiles.txt` profiles to `~/.claude`, add the `plane` MCP
+9. Claude Code config: symlink `claude/CLAUDE.md`, merge `settings.json`, install `claude/skills.txt`, link the `claude/profiles.txt` profiles to `~/.claude`, add the `plane` MCP
 10. Symlink VSCodium settings + install extensions from Open VSX (`vscodium` itself comes from `hyprland-config`)
 
 > Needs an interactive terminal — `sudo`/AUR builds prompt for a password and confirmations, so run it directly rather than through a non-interactive shell.

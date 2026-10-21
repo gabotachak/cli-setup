@@ -19,7 +19,7 @@ cli-setup/
 │   ├── config.fish           # Fish config (Tide prompt) — macOS primary shell
 │   └── functions/             # One function per file (fish convention) — shared by mac AND arch
 ├── claude/
-│   ├── CLAUDE.md, settings.json  # Global Claude Code config (symlinked into ~/.claude)
+│   ├── CLAUDE.md, settings.json  # Global Claude Code config (CLAUDE.md symlinked, settings.json jq-merged into ~/.claude)
 │   ├── profiles.txt, skills.txt  # Extra profiles (work, korvy) / third-party skills (`repo skill`)
 │   └── SETUP.md                  # Instructions for Claude to set this up on a machine
 ├── mac/
