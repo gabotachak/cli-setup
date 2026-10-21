@@ -2,7 +2,7 @@
 # setup.sh — Bootstrap a fresh Mac
 # Usage: bash setup.sh              → interactive menu
 #        bash setup.sh all          → run all steps
-#        bash setup.sh <1-9>        → run single step
+#        bash setup.sh <1-10>        → run single step
 #        CLI_ONLY=1 bash setup.sh … → skip Caskfile (GUI apps), CLI only
 set -euo pipefail
 
@@ -158,14 +158,6 @@ step_claude_code() {
 
 step_claude_plugins() {
   info "Checking Claude Code plugins..."
-  if ! claude plugin list 2>/dev/null | grep -q "caveman"; then
-    info "Installing caveman plugin..."
-    curl -fsSL https://raw.githubusercontent.com/JuliusBrussee/caveman/main/install.sh | bash
-    success "caveman installed"
-  else
-    success "caveman already installed"
-  fi
-
   if ! claude plugin list 2>/dev/null | grep -q "ponytail"; then
     info "Installing ponytail plugin..."
     claude plugin marketplace add DietrichGebert/ponytail
@@ -210,6 +202,78 @@ step_claude_plugins() {
   fi
 }
 
+# Run `claude` against a config dir ("" = default ~/.claude, so no env var at all).
+claude_in() {
+  local dir=$1; shift
+  if [[ -n "$dir" ]]; then CLAUDE_CONFIG_DIR="$dir" claude "$@"; else env -u CLAUDE_CONFIG_DIR claude "$@"; fi
+}
+
+step_claude_config() {
+  local cfg="$REPO_ROOT/claude" c="$HOME/.claude" f bak repo skill p pd e s t
+  mkdir -p "$c/skills"
+
+  info "Linking ~/.claude/CLAUDE.md + settings.json to the repo..."
+  for f in CLAUDE.md settings.json; do
+    if [[ -e "$c/$f" && ! -L "$c/$f" ]] && ! cmp -s "$c/$f" "$cfg/$f"; then
+      bak="$c/$f.bak"; [[ -e "$bak" ]] && bak="$bak.$(date +%s)"
+      mv "$c/$f" "$bak"
+      warn "$c/$f differed from the repo copy — saved as $bak"
+    fi
+    ln -sfn "$cfg/$f" "$c/$f"
+  done
+  success "CLAUDE.md + settings.json linked"
+
+  info "Installing third-party skills..."
+  while read -r repo skill; do
+    [[ -z "$repo" || "$repo" == \#* ]] && continue
+    if [[ -e "$c/skills/$skill" ]]; then
+      success "$skill already installed"
+    # -g -a claude-code --copy puts real files straight in ~/.claude/skills, no prompts, no ~/.agents symlinks
+    elif (cd "$HOME" && npx -y skills add "$repo" -g -a claude-code -s "$skill" -y --copy </dev/null >/dev/null 2>&1); then
+      success "$skill installed"
+    else
+      warn "Failed: $skill ($repo)"
+    fi
+  done < "$cfg/skills.txt"
+
+  # Upstream SKILL.md points at ${CLAUDE_PLUGIN_ROOT}/.claude/skills/..., which only exists inside a plugin.
+  if [[ -f "$c/skills/ui-ux-pro-max/SKILL.md" ]]; then
+    sed -i '' "s#\${CLAUDE_PLUGIN_ROOT}/\.claude/skills/ui-ux-pro-max/#$HOME/.claude/skills/ui-ux-pro-max/#g; s#[^\" ]*/\.claude-[A-Za-z]*/skills/ui-ux-pro-max/#$HOME/.claude/skills/ui-ux-pro-max/#g" "$c/skills/ui-ux-pro-max/SKILL.md"
+    rm -rf "$c/skills/ui-ux-pro-max/scripts/tests"
+    success "ui-ux-pro-max patched"
+  fi
+
+  info "Sharing config with extra profiles..."
+  mkdir -p "$c/plugins" "$c/projects" "$c/file-history" "$c/paste-cache" "$c/ponytail-modes"
+  touch "$c/history.jsonl"
+  while read -r p; do
+    [[ -z "$p" || "$p" == \#* ]] && continue
+    pd="$HOME/.claude-$p"
+    mkdir -p "$pd/skills"
+    for e in CLAUDE.md settings.json plugins projects history.jsonl file-history paste-cache ponytail-modes .ponytail-active ponytail-statusline.sh; do
+      if [[ -e "$pd/$e" && ! -L "$pd/$e" ]]; then warn "$pd/$e is a real file/dir — skipped"; else ln -sfn "$c/$e" "$pd/$e"; fi
+    done
+    for s in "$c"/skills/*; do
+      [[ -e "$s" ]] || continue
+      t=$(basename "$s"); [[ "$t" == synced ]] && continue
+      if [[ -e "$pd/skills/$t" && ! -L "$pd/skills/$t" ]]; then warn "$pd/skills/$t is a real dir — skipped"; else ln -sfn "$s" "$pd/skills/$t"; fi
+    done
+    success "profile $p linked"
+  done < "$cfg/profiles.txt"
+
+  info "Checking plane MCP..."
+  for p in "" $(grep -v '^#' "$cfg/profiles.txt"); do
+    pd=""; [[ -n "$p" ]] && pd="$HOME/.claude-$p"
+    if claude_in "$pd" mcp get plane &>/dev/null; then
+      success "plane MCP present (${p:-default})"
+    else
+      claude_in "$pd" mcp add --transport http -s user plane https://mcp.plane.so/http/mcp \
+        && success "plane MCP added (${p:-default})" || warn "plane MCP failed (${p:-default})"
+    fi
+  done
+  info "Run /login in each profile (claude, claude-work, claude-korvy), then /mcp to authenticate plane"
+}
+
 run_all() {
   step_xcode
   step_homebrew
@@ -220,6 +284,7 @@ run_all() {
   step_default
   step_claude_code
   step_claude_plugins
+  step_claude_config
 }
 
 run_step() {
@@ -233,7 +298,8 @@ run_step() {
     7) step_default       ;;
     8) step_claude_code   ;;
     9) step_claude_plugins ;;
-    *) warn "Invalid step: $1 (valid: 1-9)"; return 1 ;;
+    10) step_claude_config ;;
+    *) warn "Invalid step: $1 (valid: 1-10)"; return 1 ;;
   esac
 }
 
@@ -246,7 +312,8 @@ show_menu() {
   echo "  6) Symlink Fish config"
   echo "  7) Set Fish as default shell"
   echo "  8) Claude Code CLI"
-  echo "  9) Claude Code plugins (caveman, ponytail, omniroute, graphify, agent-skills, find-skills)"
+  echo "  9) Claude Code plugins (ponytail, omniroute, graphify, agent-skills, find-skills)"
+  echo "  10) Claude Code config (profiles, skills, MCP)"
   echo "  a) Run all steps"
   echo "  q) Quit"
   echo ""
@@ -261,7 +328,7 @@ case "${1:-}" in
     run_all
     done_footer
     ;;
-  [1-9])
+  [1-9]|10)
     run_step "$1"
     ;;
   "")
@@ -270,7 +337,7 @@ case "${1:-}" in
       read -rp "  Select: " choice
       echo ""
       case "$choice" in
-        [1-9]) run_step "$choice" ;;
+        [1-9]|10) run_step "$choice" ;;
         a)     run_all ;;
         q)     break ;;
         *)     warn "Invalid choice: $choice" ;;
@@ -281,7 +348,7 @@ case "${1:-}" in
     ;;
   *)
     warn "Unknown argument: $1"
-    echo "  Usage: bash setup.sh [all|1-9]"
+    echo "  Usage: bash setup.sh [all|1-10]"
     exit 1
     ;;
 esac

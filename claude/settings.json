@@ -1,0 +1,19 @@
+{
+  "extraKnownMarketplaces": {
+    "ponytail": {
+      "source": {
+        "source": "github",
+        "repo": "DietrichGebert/ponytail"
+      }
+    }
+  },
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "enabledPlugins": {
+    "ponytail@ponytail": true
+  },
+  "model": "opus",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
+}

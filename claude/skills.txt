@@ -1,0 +1,10 @@
+# <github repo> <skill>  — third-party skills installed into ~/.claude/skills
+nextlevelbuilder/ui-ux-pro-max-skill ui-ux-pro-max
+nextlevelbuilder/ui-ux-pro-max-skill banner-design
+nextlevelbuilder/ui-ux-pro-max-skill brand
+nextlevelbuilder/ui-ux-pro-max-skill design-system
+nextlevelbuilder/ui-ux-pro-max-skill slides
+nextlevelbuilder/ui-ux-pro-max-skill ui-styling
+appllama/appllama-skills appllama-app-design-skill
+ceorkm/mobile-app-ui-design mobile-app-ui-design
+vercel-labs/agent-skills web-design-guidelines
