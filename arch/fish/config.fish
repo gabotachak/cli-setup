@@ -39,4 +39,5 @@ if status is-interactive
     alias docker-compose 'docker compose'
     alias amend 'git add . && git commit --amend --no-edit && git push --force-with-lease && echo "✅ Amended and pushed!"'
     alias claude-work 'CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
+    alias claude-korvy 'CLAUDE_CONFIG_DIR=$HOME/.claude-korvy claude'
 end

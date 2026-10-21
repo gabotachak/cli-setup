@@ -54,6 +54,7 @@ alias gpl='git pull'
 alias gnew='git checkout -b'
 alias gc='git checkout'
 alias claude-work='CLAUDE_CONFIG_DIR=$HOME/.claude-work claude'
+alias claude-korvy='CLAUDE_CONFIG_DIR=$HOME/.claude-korvy claude'
 alias wakepc='wakeonlan 9c:6b:00:18:59:f4'
 
 gac() {
