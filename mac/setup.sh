@@ -229,7 +229,7 @@ step_claude_config() {
   [[ -f "$c/settings.json" ]] || echo '{}' > "$c/settings.json"
   jq -s '.[0] * .[1]' "$c/settings.json" "$cfg/settings.json" > "$c/settings.json.tmp" \
     && mv "$c/settings.json.tmp" "$c/settings.json" && success "settings.json merged" \
-    || warn "settings.json merge failed (invalid JSON?)"
+    || { rm -f "$c/settings.json.tmp"; warn "settings.json merge failed (invalid JSON?)"; }
 
   info "Installing third-party skills..."
   while read -r repo skill; do

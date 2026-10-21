@@ -59,10 +59,10 @@ cli-setup/
 ## Fresh Mac Setup
 
 ```bash
-git clone git@github.com:gabotachak/cli-setup.git ~/github.com/gabotachak/cli-setup
-bash ~/github.com/gabotachak/cli-setup/mac/setup.sh        # interactive menu
-bash ~/github.com/gabotachak/cli-setup/mac/setup.sh all    # run all steps
-CLI_ONLY=1 bash ~/github.com/gabotachak/cli-setup/mac/setup.sh all   # skip GUI apps
+git clone git@github.com:gabotachak/cli-setup.git ~/Repos/cli-setup
+bash ~/Repos/cli-setup/mac/setup.sh        # interactive menu
+bash ~/Repos/cli-setup/mac/setup.sh all    # run all steps
+CLI_ONLY=1 bash ~/Repos/cli-setup/mac/setup.sh all   # skip GUI apps
 ```
 
 Steps (run all, or pick one from the menu):
@@ -134,7 +134,7 @@ gh auth login   # choose SSH as the git protocol
 Then run `setup-keys.sh` to reuse that same key for commit signing (no GPG):
 
 ```bash
-bash ~/github.com/gabotachak/cli-setup/mac/setup-keys.sh     # macOS
+bash ~/Repos/cli-setup/mac/setup-keys.sh     # macOS
 bash ~/Repos/cli-setup/arch/setup-keys.sh                    # Arch Linux
 ```
 
