@@ -23,6 +23,9 @@ When the user types `/graphify`, use the installed graphify skill or instruction
 
 ## Ante la duda, se pregunta
 
+- **Una pregunta mía no es una orden.** Si pregunto algo, primero se responde (sólo lectura si hace falta para
+  responder bien) y no se ejecuta ninguna acción; los accionables los definimos después, juntos.
+
 - Una sesión hija o un subagente **no decide** lo que su brief o la spec no cubren: se detiene en ese punto y
   pregunta (la sesión hija con `SendMessage` a la principal; el subagente en su mensaje final). La principal
   responde, con Fable si hace falta, y el ejecutor retoma. Cada brief lo dice.
